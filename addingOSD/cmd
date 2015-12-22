@@ -1,0 +1,2 @@
+ceph osd crush add-bucket BJ-BGP01-003-03 host
+ceph osd crush add-bucket BJ-BGP01-003-03-hp host

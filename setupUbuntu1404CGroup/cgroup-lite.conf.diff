@@ -1,0 +1,14 @@
+--- /etc/init/cgroup-lite.conf	2015-12-15 14:26:47.691345621 +0800
++++ cgroup-lite.conf.patched	2015-12-15 14:27:20.799348888 +0800
+@@ -7,6 +7,11 @@
+ 	test -x /bin/cgroups-mount || { stop; exit 0; }
+ 	test -d /sys/fs/cgroup || { stop; exit 0; }
+ 	/bin/cgroups-mount
++
++	test -x /usr/sbin/cgconfigparser || { stop; exit 0; }
++	CGCONFIG=/etc/cgconfig.conf
++	[ -r $CGCONFIG ] || { echo "$CGCONFIG is empty"; stop; exit 0; }
++	/usr/sbin/cgconfigparser -l $CGCONFIG
+ end script
+ 
+ post-stop script

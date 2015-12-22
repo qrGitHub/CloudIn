@@ -1,0 +1,12 @@
+sudo pip install --no-index -f pip_cache pycparser
+sudo pip install --no-index -f pip_cache cffi
+sudo pip install --no-index -f pip_cache cairocffi
+sudo pip install --no-index -f pip_cache setuptools
+sudo pip install --no-index -f pip_cache zope.interface
+sudo pip install --no-index -f pip_cache txAMQP
+sudo pip install --no-index -f pip_cache Twisted
+sudo pip install --no-index -f pip_cache carbon
+sudo pip install --no-index -f pip_cache whisper
+sudo pip install --no-index -f pip_cache graphite-web
+sudo pip install --no-index -f pip_cache Django
+sudo pip install --no-index -f pip_cache django_tagging

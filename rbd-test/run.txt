@@ -1,0 +1,17 @@
+sata disk
+sed -i 's/^rate=""/rate="60m"/' ceph_rbd_test-seq.sh
+sed -i 's/^rate_iops=""/rate_iops="300"/' ceph_rbd_test-seq.sh
+bash ceph_rbd_test-seq.sh /dev/vdb
+
+sed -i 's/^rate=""/rate="60m"/' ceph_rbd_test-rand.sh
+sed -i 's/^rate_iops=""/rate_iops="300"/' ceph_rbd_test-rand.sh
+bash ceph_rbd_test-rand.sh /dev/vdb
+
+ssd disk
+sed -i 's/^rate="60m"/rate=""/' ceph_rbd_test-seq.sh
+sed -i 's/^rate_iops="300"/rate_iops=""/' ceph_rbd_test-seq.sh
+bash ceph_rbd_test-seq.sh /dev/vdc
+
+sed -i 's/^rate="60m"/rate=""/' ceph_rbd_test-rand.sh
+sed -i 's/^rate_iops="300"/rate_iops=""/' ceph_rbd_test-rand.sh
+bash ceph_rbd_test-rand.sh /dev/vdc

@@ -1,0 +1,5 @@
+[client.cinder]
+	key = AQCyh0xW3qUbCRAAfl1S273khB9GkKOreCA6+Q==
+	caps mds = "allow r"
+	caps mon = "allow rw"
+	caps osd = "allow *"

@@ -1,0 +1,7 @@
+[mds]
+    mds data = /var/lib/ceph/mds/ceph-$id
+    keyring = /var/lib/ceph/mds/ceph-$id/keyring
+[mds.0]
+    host = {BJ-BGP01-002-08}
+[mds.1]
+    host = {BJ-BGP01-003-08}

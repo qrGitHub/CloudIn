@@ -1,0 +1,22 @@
+BJ-BGP01-002-01:/opt/osdeploy/deploy/src/ceph/
+ceph-deploy --overwrite-conf mds create BJ-BGP01-002-08 BJ-BGP01-003-08
+
+BJ-BGP01-002-01
+ceph osd pool create cephfs_metadata 512 512 replicated replicated_volumes_ruleset_1
+ceph osd pool create cephfs_data 512 512 replicated replicated_volumes_ruleset_2
+ceph fs new cephfs cephfs_metadata cephfs_data
+
+BJ-BGP01-002-01
+sudo mkdir /cephfs/
+sudo mount -t ceph 172.16.0.7:6789:/ /cephfs/
+sudo sed -i '$a\172.16.0.7:6789:\/ \/cephfs\/ ceph noatime 0 2' /etc/fstab
+
+BJ-BGP01-003-01
+sudo mkdir /cephfs/
+sudo mount -t ceph 172.16.0.17:6789:/ /cephfs/
+sudo sed -i '$a\172.16.0.17:6789:\/ \/cephfs\/ ceph noatime 0 2' /etc/fstab
+
+BJ-BGP01-002-01
+cd /opt/osdeploy/deploy/src/ceph/
+update ceph.conf of current directory and send it to all hosts
+ceph-deploy --overwrite-conf config push BJ-BGP01-002-01 BJ-BGP01-002-02 BJ-BGP01-002-03 BJ-BGP01-002-04 BJ-BGP01-002-05 BJ-BGP01-002-06 BJ-BGP01-002-07 BJ-BGP01-002-08 BJ-BGP01-003-01 BJ-BGP01-003-02 BJ-BGP01-003-03 BJ-BGP01-003-04 BJ-BGP01-003-05 BJ-BGP01-003-06 BJ-BGP01-003-07 BJ-BGP01-003-08

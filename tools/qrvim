@@ -1,0 +1,13 @@
+#!/bin/bash
+
+vimrc="/home/openstack/qr/.vimrc"
+cmd="vim"
+
+if [ -f $vimrc ]; then
+    cmd="$cmd -u $vimrc"
+else
+    echo "E282: Cannot read from \"$vimrc\""
+    read -p "Press ENTER to continue"
+fi
+
+$cmd $*

@@ -1,3 +1,6 @@
+#ceph osd crush add-bucket BJ-BGP01-003-03 host
+#ceph osd crush add-bucket BJ-BGP01-003-03-hp host
+
 bash addingOSD.sh 140 /dev/sdf1 3.640 "root=volumes-1 host=BJ-BGP01-003-03"
 bash addingOSD.sh 141 /dev/sdg1 3.640 "root=volumes-1 host=BJ-BGP01-003-03"
 bash addingOSD.sh 142 /dev/sdh1 3.640 "root=volumes-1 host=BJ-BGP01-003-03"

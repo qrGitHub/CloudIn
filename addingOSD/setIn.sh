@@ -5,5 +5,5 @@ do
     if [ $i -eq 156 ]; then
         continue
     fi
-    ceph osd in $i
+    eval "ceph osd in $i"
 done

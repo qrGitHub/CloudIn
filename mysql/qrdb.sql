@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS userinfo;
+
+CREATE TABLE userinfo (
+    UserId int(11) NOT NULL AUTO_INCREMENT,
+    UserName varchar(64) DEFAULT NULL,
+    PRIMARY KEY (UserId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

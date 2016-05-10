@@ -1,0 +1,12 @@
+service mysql stop
+cp -a /var/lib/mysql mysql
+rm -rf /var/lib/mysql/*
+mkfs.ext4 /dev/vdb
+mv /var/lib/mysql /var/lib/mysqlDisk
+mount /dev/vdb /var/lib/mysqlDisk/
+cp -a mysql /var/lib/mysqlDisk/
+vim /etc/fstab
+blkid /dev/vdb 
+vim /etc/mysql/my.cnf 
+vim /etc/apparmor.d/usr.sbin.mysqld 
+service mysql start

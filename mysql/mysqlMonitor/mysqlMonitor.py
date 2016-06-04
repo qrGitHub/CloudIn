@@ -26,7 +26,9 @@ class mysqlMonitor:
                         'Queries': '.MYSQLQUERIESRECORD.DAT',
                         'qps': '.MYSQLQPSRECORD.DAT',
                         'tps': '.MYSQLTPSRECORD.DAT',
+                        'iops': '.IOPSRECORD.DAT',
                         }
+        self.device = '/dev/vdb'
 
     def getGlobalStatus(self, statusName):
         mysqlCmd = 'show global status like \'{0}\';'.format(statusName)
@@ -338,19 +340,98 @@ class mysqlMonitor:
 
         return ret
 
+    def deviceName2No(self, name):
+        cmd = 'ls -l ' + name
+        ret, res = doLocalCommand(cmd)
+        if ret != 0:
+            sys.stderr.write('Run command `%s` failed[%d]\n' % (cmd, ret))
+            sys.stderr.write('%s\n' % res)
+            return ret, (None, None)
+
+        matchObj = re.match(r'^.*\s(\d+),\s(\d+)\s', res)
+        if matchObj:
+            major = matchObj.group(1)
+            minor = matchObj.group(2)
+        else:
+            sys.stderr.write('match device num from "%s" failed\n' % res)
+            return 1, (None, None)
+
+        return 0, (major, minor)
+
+    def getDiskstats(self, major, minor):
+        cmd = 'cat /proc/diskstats | grep "{0}\s\+{1}"'.format(major, minor)
+        ret, res = doLocalCommand(cmd)
+        if ret != 0:
+            sys.stderr.write('Run command `%s` failed[%d]\n' % (cmd, ret))
+            sys.stderr.write('%s\n' % res)
+            return ret, None
+
+        return 0, res
+
+    def getDiskios(self, major, minor):
+        ret, res = self.getDiskstats(major, minor)
+        if ret != 0:
+            sys.stderr.write('Get disk stats failed[%d]\n' % ret)
+            return None
+
+        res = res.split()
+        return (int(res[3]), int(res[7]))
+
+    def createIORecord(self):
+        ret, (major, minor) = self.deviceName2No(self.device)
+        if 0 != ret:
+            sys.stderr.write('Transfer device name(%s) to device no. failed\n' % self.device)
+            return None
+
+        ios = self.getDiskios(major, minor)
+        if None == ios:
+            sys.stderr.write('Get disk reads and writes failed\n')
+            return None
+
+        currTime = int(time.time())
+        return ios[0], ios[1], currTime
+
+    def getIOPS(self):
+        '''
+        Name: IOPS
+        Unit: reads/writes number per second
+
+        '''
+        record = self.createIORecord()
+        if None == record:
+            sys.stderr.write('create IO record failed\n')
+            return None
+
+        prevRecord = readRecord('<QQQ', self.fileName['iops'])
+        writeRecord(record, '<QQQ', self.fileName['iops'])
+        if None == prevRecord:
+            return (0, 0)
+
+        readsDiff = record[0] - prevRecord[0]
+        writesDiff = record[1] - prevRecord[1]
+        timeDiff = record[2] - prevRecord[2]
+        if 0 != timeDiff:
+            rps = 1.0 * readsDiff / timeDiff
+            wps = 1.0 * writesDiff / timeDiff
+        else:
+            rps = wps = 0
+
+        return (rps, wps)
+
 if __name__ == '__main__':
     obj = mysqlMonitor()
-    print obj.getConnectionNum()
-    print obj.getActiveConnectionNum()
-    print obj.getInnodbFreeBufferSize()
-    print obj.getInnodbHitratio()
-    print obj.getQPS()
-    print obj.getTPS()
-    print obj.getScanNum()
-    print obj.getRollbackNum()
-    print obj.getCommitNum()
-    print obj.getQueriesNum()
-    print obj.getSlowqueries()
-    print obj.secondsBehindMaster()
-    print obj.sqlThreadStatus()
-    print obj.ioThreadStatus()
+    #print obj.getConnectionNum()
+    #print obj.getActiveConnectionNum()
+    #print obj.getInnodbFreeBufferSize()
+    #print obj.getInnodbHitratio()
+    #print obj.getQPS()
+    #print obj.getTPS()
+    #print obj.getScanNum()
+    #print obj.getRollbackNum()
+    #print obj.getCommitNum()
+    #print obj.getQueriesNum()
+    #print obj.getSlowqueries()
+    #print obj.secondsBehindMaster()
+    #print obj.sqlThreadStatus()
+    #print obj.ioThreadStatus()
+    print obj.getIOPS()

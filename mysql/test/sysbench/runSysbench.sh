@@ -14,7 +14,7 @@ function EXIT() {
 }
 
 #create database
-mysql -u$user -p$passwd -e "drop database if exists $db_name;"
+mysql -u$user -p$passwd -h $host -e "drop database if exists $db_name;"
 mysql -u$user -p$passwd -h $host -P $port -e "create database $db_name;"
 [ $? -eq 0 ] || EXIT "Create database FAILED!"
 

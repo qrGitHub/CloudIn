@@ -26,7 +26,8 @@ class mysqlMonitor:
                         'Queries': '.MYSQLQUERIESRECORD.DAT',
                         'qps': '.MYSQLQPSRECORD.DAT',
                         'tps': '.MYSQLTPSRECORD.DAT',
-                        'iops': '.IOPSRECORD.DAT',
+                        'read_iops': '.READIOPSRECORD.DAT',
+                        'write_iops': '.WRITEIOPSRECORD.DAT',
                         }
         self.device = '/dev/vdb'
 
@@ -368,55 +369,81 @@ class mysqlMonitor:
 
         return 0, res
 
-    def getDiskios(self, major, minor):
+    def getDiskios(self, major, minor, read):
         ret, res = self.getDiskstats(major, minor)
         if ret != 0:
             sys.stderr.write('Get disk stats failed[%d]\n' % ret)
             return None
 
         res = res.split()
-        return (int(res[3]), int(res[7]))
+        if read != 0:
+            return int(res[3])
+        else:
+            return int(res[7])
 
-    def createIORecord(self):
+    def createIORecord(self, read):
         ret, (major, minor) = self.deviceName2No(self.device)
         if 0 != ret:
             sys.stderr.write('Transfer device name(%s) to device no. failed\n' % self.device)
             return None
 
-        ios = self.getDiskios(major, minor)
+        ios = self.getDiskios(major, minor, read)
         if None == ios:
-            sys.stderr.write('Get disk reads and writes failed\n')
+            sys.stderr.write('Get disk ios(%d) failed\n' % read)
             return None
 
         currTime = int(time.time())
-        return ios[0], ios[1], currTime
+        return ios, currTime
 
-    def getIOPS(self):
+    def getReadIOPS(self):
         '''
-        Name: IOPS
-        Unit: reads/writes number per second
+        Name: read IOPS
+        Unit: reads number per second
 
         '''
-        record = self.createIORecord()
+        record = self.createIORecord(1)
         if None == record:
-            sys.stderr.write('create IO record failed\n')
+            sys.stderr.write('create read record failed\n')
             return None
 
-        prevRecord = readRecord('<QQQ', self.fileName['iops'])
-        writeRecord(record, '<QQQ', self.fileName['iops'])
+        prevRecord = readRecord('<QQ', self.fileName['read_iops'])
+        writeRecord(record, '<QQ', self.fileName['read_iops'])
         if None == prevRecord:
-            return (0, 0)
+            return 0
 
         readsDiff = record[0] - prevRecord[0]
-        writesDiff = record[1] - prevRecord[1]
-        timeDiff = record[2] - prevRecord[2]
+        timeDiff = record[1] - prevRecord[1]
         if 0 != timeDiff:
             rps = 1.0 * readsDiff / timeDiff
+        else:
+            rps = 0
+
+        return rps
+
+    def getWriteIOPS(self):
+        '''
+        Name: write IOPS
+        Unit: writes number per second
+
+        '''
+        record = self.createIORecord(0)
+        if None == record:
+            sys.stderr.write('create write record failed\n')
+            return None
+
+        prevRecord = readRecord('<QQ', self.fileName['write_iops'])
+        writeRecord(record, '<QQ', self.fileName['write_iops'])
+        if None == prevRecord:
+            return 0
+
+        writesDiff = record[0] - prevRecord[0]
+        timeDiff = record[1] - prevRecord[1]
+        if 0 != timeDiff:
             wps = 1.0 * writesDiff / timeDiff
         else:
-            rps = wps = 0
+            wps = 0
 
-        return (rps, wps)
+        return wps
 
 if __name__ == '__main__':
     obj = mysqlMonitor()
@@ -434,4 +461,5 @@ if __name__ == '__main__':
     #print obj.secondsBehindMaster()
     #print obj.sqlThreadStatus()
     #print obj.ioThreadStatus()
-    print obj.getIOPS()
+    print obj.getReadIOPS()
+    print obj.getWriteIOPS()

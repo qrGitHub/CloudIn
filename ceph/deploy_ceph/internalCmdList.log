@@ -1,0 +1,63 @@
+python openstack_ceph_deploy.py -d /home/ceph/mydebpkg/
+
+conf_ceph_file = deploy.conf
+no mds configured in configure file
+purge hosts: ['ceph1', 'ceph2', 'ceph3']
+Command: ceph-deploy purge ceph1 ceph2 ceph3
+Command: ceph-deploy purgedata ceph1 ceph2 ceph3
+Command: ssh ceph1 'ls /home/ceph/mydebpkg/* | grep prepare.sh'
+Command: ssh ceph1 'ls /home/ceph/mydebpkg/.tar.gz'
+Command: ssh ceph1 'cd /home/ceph/mydebpkg; tar -zxf .tar.gz
+Command: ssh ceph1 'cd /home/ceph/mydebpkg/; bash prepare.sh'
+Command: ssh ceph2 'ls /home/ceph/mydebpkg/* | grep prepare.sh'
+Command: ssh ceph2 'ls /home/ceph/mydebpkg/.tar.gz'
+Command: ssh ceph2 'cd /home/ceph/mydebpkg; tar -zxf .tar.gz
+Command: ssh ceph2 'cd /home/ceph/mydebpkg/; bash prepare.sh'
+Command: ssh ceph3 'ls /home/ceph/mydebpkg/* | grep prepare.sh'
+Command: ssh ceph3 'ls /home/ceph/mydebpkg/.tar.gz'
+Command: ssh ceph3 'cd /home/ceph/mydebpkg; tar -zxf .tar.gz
+Command: ssh ceph3 'cd /home/ceph/mydebpkg/; bash prepare.sh'
+Command: ssh ceph1 'cd /home/ceph/mydebpkg/; bash install.sh'
+Command: ssh ceph2 'cd /home/ceph/mydebpkg/; bash install.sh'
+Command: ssh ceph3 'cd /home/ceph/mydebpkg/; bash install.sh'
+Command: rm -rf ceph.*
+Command: ceph-deploy new ceph1
+Command: sed -i 's/cephx/none/g' ceph.conf
+Command: sed -i '2,$s/^/    /g' ceph.conf
+Command: sed -e '1d' deploy.conf >> ceph.conf
+Command: sed -i 's/\/osd-journal-path//g' ceph.conf
+Command: ceph-deploy mon create-initial
+Command: ceph-deploy osd create -h | grep '\--zap-disk'
+Command: ceph-deploy --overwrite-conf admin ceph1 ceph2 ceph3
+Command: ceph-authtool --create-keyring /etc/ceph/volumes.keyring
+Command: ceph-authtool /etc/ceph/volumes.keyring -n client.volumes --gen-key
+Command: ceph-authtool /etc/ceph/volumes.keyring -n client.volumes --cap osd 'allow *' --cap mon 'allow rw' --cap mds 'allow r'
+Command: ceph auth add client.volumes -i /etc/ceph/volumes.keyring
+Command: scp /etc/ceph/volumes.keyring ceph1:/etc/ceph/volumes.keyring
+Command: scp /etc/ceph/volumes.keyring ceph2:/etc/ceph/volumes.keyring
+Command: scp /etc/ceph/volumes.keyring ceph3:/etc/ceph/volumes.keyring
+Command: ceph-authtool --create-keyring /etc/ceph/cinder.keyring
+Command: ceph-authtool /etc/ceph/cinder.keyring -n client.cinder --gen-key
+Command: ceph-authtool /etc/ceph/cinder.keyring -n client.cinder --cap osd 'allow *' --cap mon 'allow rw' --cap mds 'allow r'
+Command: ceph auth add client.cinder -i /etc/ceph/cinder.keyring
+Command: scp /etc/ceph/cinder.keyring ceph1:/etc/ceph/cinder.keyring
+Command: scp /etc/ceph/cinder.keyring ceph2:/etc/ceph/cinder.keyring
+Command: scp /etc/ceph/cinder.keyring ceph3:/etc/ceph/cinder.keyring
+Command: ceph-authtool --create-keyring /etc/ceph/images.keyring
+Command: ceph-authtool /etc/ceph/images.keyring -n client.images --gen-key
+Command: ceph-authtool /etc/ceph/images.keyring -n client.images --cap osd 'allow *' --cap mon 'allow rw' --cap mds 'allow r'
+Command: ceph auth add client.images -i /etc/ceph/images.keyring
+Command: scp /etc/ceph/images.keyring ceph1:/etc/ceph/images.keyring
+Command: scp /etc/ceph/images.keyring ceph2:/etc/ceph/images.keyring
+Command: scp /etc/ceph/images.keyring ceph3:/etc/ceph/images.keyring
+nums: 6
+Command: ceph osd pool create images 128
+Command: ceph osd pool create volumes 128
+Command: ceph osd pool create backups 128
+Command: ceph osd pool create vms 128
+Command: ssh ceph1 mkdir -p /var/run/ceph/ceph-client
+Command: ssh ceph1 chmod 777 /var/run/ceph/ceph-client
+Command: ssh ceph2 mkdir -p /var/run/ceph/ceph-client
+Command: ssh ceph2 chmod 777 /var/run/ceph/ceph-client
+Command: ssh ceph3 mkdir -p /var/run/ceph/ceph-client
+Command: ssh ceph3 chmod 777 /var/run/ceph/ceph-client

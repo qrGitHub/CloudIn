@@ -1,0 +1,8 @@
+# common-functions for Debian -*- shell-script -*-
+#!/bin/bash
+
+doCommand() {
+    echo "^_^ doCommand: $*"
+    eval $*
+    [ $? -eq 0 ] || exit 1
+}

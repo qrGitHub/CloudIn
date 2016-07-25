@@ -1,0 +1,113 @@
+[global]
+    filestore_fd_cache_size = 204800
+    filestore_omap_header_cache_size = 204800
+
+    osd pool default pg num = 512
+    osd pool default pgp num = 512
+    osd pool default size = 2
+    osd pool default min size = 1
+
+    ## allow ourselves to open a lot of files
+    max open files = 320000
+    mon osd min down reporters = 13
+    mon_osd_min_down_reports = 8
+    osd_heartbeat_interval = 10
+    osd_heartbeat_grace = 60
+    mon_osd_report_timeout = 1800
+    log_to_syslog = false        ; uncomment this line to log to syslog
+    ms_nocrc = true
+    ms_bind_port_min = 6800
+    ms_bind_port_max = 7000
+
+    filestore_fiemap = true
+
+##################
+## Monitors
+## You need at least one. You need at least three if you want to
+## tolerate any node failures. Always create an odd number.
+[mon]
+    hosts = cloud01,cloud02, cloud03
+
+    mon clock drift allowed    = .15
+    mon osd down out interval = 1800
+    mon_pg_warn_max_object_skew = 0
+
+
+[osd]
+    hosts = cloud01, cloud02, cloud03, cloud04
+
+    osd.cloud01.devs = /dev/sdb, /dev/sdc1, /dev/sdd, /dev/sde, /dev/sdf, /dev/sdh
+    osd.cloud02.devs = /dev/sdb, /dev/sdd2, /dev/sde, /dev/sdf, /dev/sdh
+    osd.cloud03.devs = /dev/sdb, /dev/sdc, /dev/sdf1, /dev/sdh
+    osd.cloud04.devs = /dev/sdb, /dev/sdg, /dev/sdh2, /dev/sdi, /dev/sdk
+
+    # osd journal = /osd-journal-path/osd$id/journal
+    osd journal size = 10000    ;journal size, in megabytes
+
+    osd_recovery_threads = 1
+    osd recovery max active = 2
+    osd_max_backfills = 2
+    osd_recovery_max_chunk = 4194304
+    osd_recovery_op_priority = 5
+
+    osd mkfs type = xfs
+    osd mount options xfs = rw,noatime,inode64,logbsize=256k,delaylog
+    osd mkfs options xfs = -f -i size=2048
+
+    osd op threads = 4
+    osd disk threads = 2
+    osd_map_cache_size = 1024
+    osd_op_num_threads_per_shard = 2
+    osd_op_num_shards = 15
+
+    osd_op_thread_timeout = 5
+    osd op history size = 20
+
+    filestore queue max ops = 50000
+    filestore queue max bytes = 10485760000
+    filestore queue committing max bytes = 10485760000
+    filestore queue committing max ops = 50000
+    filestore op threads = 8
+    filestore journal writeahead = true
+
+    ## filesytem config
+    filestore_wbthrottle_xfs_ios_start_flusher = 10000000
+    filestore_wbthrottle_xfs_ios_hard_limit = 10000000
+    filestore_wbthrottle_xfs_inodes_start_flusher = 10000
+    filestore_wbthrottle_xfs_inodes_hard_limit = 10000
+    filestore_wbthrottle_xfs_bytes_start_flusher = 419430400
+    filestore_wbthrottle_xfs_bytes_hard_limit = 4194304000
+
+    journal max write entries = 50000
+    journal queue max ops = 50000
+    objecter inflight ops = 819200
+    journal max write bytes = 10485760000
+    journal queue max bytes = 10485760000
+    ms dispatch throttle bytes = 1048576000
+    objecter inflight op bytes = 1048576000
+    osd_client_message_cap = 1000000
+    osd_client_message_size_cap = 2147483648
+    osd_max_write_size = 512
+
+    ## manage the CRUSH map entirely manually
+    ## only need configure this after we had set our crushmap
+    #osd crush update on start = false
+
+
+[client]
+    rbd cache = true
+    rbd cache size = 268435456
+    rbd cache max dirty = 134217728
+    rbd cache max dirty age = 5
+    rbd cache writethrough until flush = true
+    rbd_default_order = 25
+    rbd_default_stripe_unit = 4194304
+    rbd_default_stripe_count = 8
+    admin socket = /var/run/ceph/ceph-client/$cluster-$type.$id.$pid.asok
+
+[client.images]
+    keyring = /etc/ceph/images.keyring
+[client.volumes]
+    keyring = /etc/ceph/volumes.keyring
+[client.cinder]
+    keyring = /etc/ceph/cinder.keyring

@@ -8,3 +8,6 @@ echo 4194303 > /proc/sys/kernel/pid_max
 
 # Adjust the readahead size for all SATAs
 echo 8192 | tee /sys/block/sd[bf-k]/queue/read_ahead_kb > /dev/null
+
+# Set the I/O scheduler to 'noop' for all SSDs
+echo noop | tee /sys/block/sd[c-e]/queue/scheduler > /dev/null

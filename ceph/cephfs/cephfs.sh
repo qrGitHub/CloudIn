@@ -96,7 +96,7 @@ removeCephFs() {
 }
 
 mountCephFs() {
-    doCommand sudo mkdir $mountPoint
+    doCommand sudo mkdir -p $mountPoint
     ret=$?
     if [ $ret -ne 0 ]; then
         echo "Create directory $mountPoint failed!"

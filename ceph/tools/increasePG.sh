@@ -59,3 +59,8 @@ do
 done
 
 unset_osd_status nobackfill norecover noout nodown
+
+#First, create a function to check for any pg states that you don't want to continue if any pgs are in them (better than duplicating code).
+#Second, set the flags so your cluster doesn't die when you do this.
+#Third, set your numbers of current PGs and the desired PGs for the while loop. As you'll found, increasing by 256 is a good number. More than that and you'll run into issues of your cluster curling into a fetal position and crying. This will loop through increasing your pg_num, wait until everything is settled, then increase your pgp_num. The seemingly excessive sleeps are to help the cluster be able to resolve blocked requests that will still happen during this.
+#Lastly unset the flags to let the cluster start moving the data around.

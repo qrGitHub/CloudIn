@@ -1,0 +1,15 @@
+stop ceph-all
+
+umount /var/lib/ceph/osd/ceph-*
+mv /var/lib/ceph/osd/{ceph,remote}-2
+mv /var/lib/ceph/osd/{ceph,remote}-3
+mount /dev/vdb1 /var/lib/ceph/osd/remote-2
+mount /dev/vdc1 /var/lib/ceph/osd/remote-3
+
+mv /var/lib/ceph/mon/{ceph,remote}-ceph32
+mv /var/lib/ceph/mds/{ceph,remote}-ceph32
+
+mv /etc/ceph/{ceph,remote}.conf
+mv /etc/ceph/{ceph,remote}.client.admin.keyring
+
+start ceph-all

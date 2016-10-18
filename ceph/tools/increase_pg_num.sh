@@ -1,8 +1,12 @@
 #!/bin/bash
 
-pool_name=rbd
-from=128
-to=512
+if [ $# -ne 3 ]; then
+    printf "Usage:\n\tbash %s <pool name> <from> <to>\n" "$0"
+else
+    pool_name=$1
+    from=$2
+    to=$3
+fi
 
 check_status(){
     ceph health | grep -w 'peering\|stale\|activating\|creating\|down' > /dev/null
@@ -10,27 +14,26 @@ check_status(){
 }
 
 set_osd_status() {
-    for flag in $*
+    for flag in "$@"
     do
-        ceph osd set $flag
+        ceph osd set "$flag"
     done
 }
 
 unset_osd_status() {
-    for flag in $*
+    for flag in "$@"
     do
-        ceph osd unset $flag
+        ceph osd unset "$flag"
     done
 }
 
 set_osd_status nobackfill norecover noout nodown
 
-while [ $from -lt $to ]
+while [ "$from" -lt "$to" ]
 do
-    if [ $(($to - $from)) -gt 256 ]; then
+    if [ $((to - from)) -gt 256 ]; then
         let "from += 256"
-        let "reminder = from % 256"
-        let "from -= reminder"
+        let "from -= from % 256"
     else
         from=$to
     fi
@@ -40,7 +43,7 @@ do
         check_status
         if [ $? -ne 0 ]
         then
-            ceph osd pool set $pool_name pg_num $from
+            ceph osd pool set "$pool_name" pg_num "$from"
             sleep 60
             break
         fi
@@ -51,7 +54,7 @@ do
         check_status
         if [ $? -ne 0 ]
         then
-            ceph osd pool set $pool_name pgp_num $from
+            ceph osd pool set "$pool_name" pgp_num "$from"
             sleep 60
             break
         fi

@@ -2,13 +2,20 @@
 
 if [ $# -ne 3 ]; then
     printf "Usage:\n\tbash %s <pool name> <from> <to>\n" "$0"
+    exit 1
 else
     pool_name=$1
     from=$2
     to=$3
 fi
 
-check_status(){
+doCommand() {
+    echo "^_^ doCommand: $*"
+    eval "$@"
+    [ $? -eq 0 ] || exit 1
+}
+
+check_status() {
     ceph health | grep -w 'peering\|stale\|activating\|creating\|down' > /dev/null
     return $?
 }
@@ -16,18 +23,35 @@ check_status(){
 set_osd_status() {
     for flag in "$@"
     do
-        ceph osd set "$flag"
+        doCommand ceph osd set "$flag"
     done
 }
 
 unset_osd_status() {
     for flag in "$@"
     do
-        ceph osd unset "$flag"
+        doCommand ceph osd unset "$flag"
     done
 }
 
-set_osd_status nobackfill norecover noout nodown
+enable_scrub() {
+    unset_osd_status nodeep-scrub noscrub
+}
+
+disable_scrub() {
+    set_osd_status noscrub nodeep-scrub
+}
+
+set_maintenance_mode() {
+    set_osd_status norecover nobackfill nodown noout
+}
+
+unset_maintenance_mode() {
+    unset_osd_status noout nodown nobackfill norecover
+}
+
+disable_scrub
+set_maintenance_mode
 
 while [ "$from" -lt "$to" ]
 do
@@ -43,7 +67,8 @@ do
         check_status
         if [ $? -ne 0 ]
         then
-            ceph osd pool set "$pool_name" pg_num "$from"
+            doCommand ceph osd pool set "$pool_name" pg_num "$from"
+            echo "wait 60s for the cluster to create and peer the new pgs"
             sleep 60
             break
         fi
@@ -54,14 +79,16 @@ do
         check_status
         if [ $? -ne 0 ]
         then
-            ceph osd pool set "$pool_name" pgp_num "$from"
+            doCommand ceph osd pool set "$pool_name" pgp_num "$from"
+            echo "wait 60s for the cluster to create and peer(pgp)"
             sleep 60
             break
         fi
     done
 done
 
-unset_osd_status nobackfill norecover noout nodown
+unset_maintenance_mode
+enable_scrub
 
 #First, create a function to check for any pg states that you don't want to continue if any pgs are in them (better than duplicating code).
 #Second, set the flags so your cluster doesn't die when you do this.

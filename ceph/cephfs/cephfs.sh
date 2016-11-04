@@ -4,8 +4,8 @@ usage() {
     printf "Example:\n"
     printf "\tbash $0 --create --metadataPoolName cephfs_metadata --dataPoolName cephfs_data --metadataPoolPgnum 32 --dataPoolPgnum 32\n"
     printf "\tbash $0 --remove --metadataPoolName cephfs_metadata --dataPoolName cephfs_data\n"
-    printf "\tbash $0 --mount --mountPoint /console_data/ --monitorIP 10.1.0.21\n"
-    printf "\tbash $0 --umount --mountPoint /console_data/\n"
+    printf "\tbash $0 --mount --mountPoint /cephfs/ --monitorIP 10.1.0.21\n"
+    printf "\tbash $0 --umount --mountPoint /cephfs/\n"
     printf "Description:\n\tSometimes before removing ceph fs, we need to stop all mds daemons first\n"
     exit $1
 }

@@ -44,6 +44,7 @@ doCommand sudo mount -o rw,noatime,inode64,logbsize=256k,delaylog $osdDevice $os
 doCommand sudo ceph-osd -i $osdID --mkfs --mkkey
 doCommand sudo ceph auth add osd.$osdID osd \'allow *\' mon \'allow rwx\' -i $osdDir/keyring
 doCommand sudo ceph osd crush add $osdID $weight $bucket
+doCommand sudo touch $osdDir/upstart
 
 echo "Verify the crush map, update it if needed"
 echo "Prepare file /etc/ceph/ceph.conf and scp it to other hosts"

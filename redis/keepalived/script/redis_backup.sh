@@ -4,4 +4,4 @@ test -r /etc/keepalived/script/redis_common.sh && . /etc/keepalived/script/redis
 
 LOG Being slave
 
-doCommand "$REDISCLI" -a "$PASSWORD" SLAVEOF "$MASTER_IP" "$MASTER_PORT"
+doCommand "$REDISCLI" -a "$PASSWORD" SLAVEOF "$PEER_IP" "$MASTER_PORT"

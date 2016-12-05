@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export MASTER_IP=10.1.0.110
+export PEER_IP=10.1.0.110
 export MASTER_PORT=6379
 export PASSWORD=123456
 

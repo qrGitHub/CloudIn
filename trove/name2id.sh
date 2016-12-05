@@ -8,6 +8,10 @@ fi
 source /opt/osdeploy/admin_openrc.sh
 
 name=$(echo "$1" | grep -Eo "rds-[^-]+")
+if [ -z "$name" ]; then
+    printf "%s is an illegal RDS name\n" "$1"
+    exit 1
+fi
 
 for ID in $(trove list --all | grep "$name" | awk -F'|' '{print $2}')
 do

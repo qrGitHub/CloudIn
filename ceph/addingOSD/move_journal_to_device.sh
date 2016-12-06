@@ -2,7 +2,7 @@
 
 doCommand() {
     echo "^_^ doCommand: $*"
-    #eval $*
+    eval $*
     [[ $? -eq 0 ]] || exit 1
 }
 
@@ -16,9 +16,11 @@ osdID=$1
 journalPath=$2
 devicePath=$3
 
-doCommand sudo stop ceph-osd id=$osdID
-doCommand sudo ceph-osd --flush-journal -i $osdID
-doCommand sudo rm -f $journalPath
+doCommand ceph osd set noout
+doCommand stop ceph-osd id=$osdID
+doCommand ceph-osd --flush-journal -i $osdID
+doCommand rm $journalPath
 doCommand ln -s $devicePath $journalPath
 doCommand ceph-osd -i $osdID --mkjournal
 doCommand start ceph-osd id=$osdID
+doCommand ceph osd unset noout

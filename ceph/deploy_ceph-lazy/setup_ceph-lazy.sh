@@ -1,6 +1,7 @@
 #!/bin/bash
 
-apt-get install jq
+#apt-get install jq
+bash setup_jq.sh
 
 cp ceph-lazy /usr/local/sbin/
 chown root:root /usr/local/sbin/ceph-lazy

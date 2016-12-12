@@ -4,7 +4,7 @@ pkgName=debpkg-$version
 
 doCommand() {
     echo "^_^ doCommand: $*"
-    #eval $*
+    #eval "$@"
     [ $? -eq 0 ] || exit 1
 }
 

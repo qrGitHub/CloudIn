@@ -8,14 +8,14 @@ setupOpenstackEnvironment() {
 
 doCommand() {
     echo "^_^ doCommand: $*"
-    eval $*
+    eval "$@"
     [ $? -eq 0 ] || exit 1
 }
 
 waitUntilActive() {
     while [ 1 ]
     do
-        serverStatus=$(eval $*)
+        serverStatus=$(eval "$@")
         if [ "$serverStatus" == "ACTIVE" ]; then
             break
         elif [ "$serverStatus" == "ERROR" ]; then

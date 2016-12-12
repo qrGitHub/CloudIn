@@ -2,7 +2,7 @@
 
 doCommand() {
     echo "^_^ $FUNCNAME: $*"
-    eval $*
+    eval "$@"
     [ $? -eq 0 ] || exit 1
 }
 

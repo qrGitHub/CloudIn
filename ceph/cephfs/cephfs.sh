@@ -18,7 +18,7 @@ EXIT() {
 doCommand() {
     echo "^_^ doCommand: $*"
     if [ ! $debugFlag ]; then
-        eval $*
+        eval "$@"
     fi
 }
 

@@ -1,0 +1,36 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Default-Start:     3
+# Default-Stop:      0 1 6
+# Short-Description: Example initscript
+# Description:       This file should be used to construct scripts to be
+#                    placed in /etc/init.d.
+### END INIT INFO
+
+LOGDIR=/var/log/ceph/
+mkdir -p $LOGDIR
+LOGFILE=${LOGDIR}ceph_rest_api
+RETVAL=0
+
+case "$1" in
+    start)
+        echo "Starting ceph-rest-api python server"
+        /usr/bin/ceph-rest-api -n client.admin >>$LOGFILE &
+        RETVAL=$?
+        ;;
+    stop)
+        echo "Stopping ceph_rest_api python server"
+        ps -ef | grep -i 'ceph-rest-api' | grep python | grep -v 'grep' | tr -s ' ' | awk '{print "kill -9", $2}' | sh
+        RETVAL=$?
+        ;;
+    status)
+        echo -n "ceph-rest-api is "
+        ps -ef | grep -i 'ceph-rest-api' | grep python | grep -v 'grep' | tr -s ' ' | wc -l | awk '{if ($1 == 0)  print "not up"; else print "up" }'
+        ;;
+    *)
+        echo "Usage: /etc/init.d/ceph-rest-api {start|stop|status}"
+        exit 1
+        ;;
+esac
+
+exit $RETVAL

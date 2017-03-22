@@ -21,17 +21,18 @@ get_port_attr() {
         return 1
     fi
 
-    echo "$line" | awk -F'|' '{print $3}'
+    echo "$line" | awk -F'|' '{print $3}' | grep -o "[^ ]\+\( \+[^ ]\+\)*"
 }
 
 delete_port() {
-    status=$(get_port_attr "$1" status)
+    owner=$(get_port_attr "$1" device_owner)
     if [ $? -ne 0 ]; then
-        printf "get port status for %s failed\n" "$1"
+        printf "get port owner for %s failed\n" "$1"
         return 1
     fi
 
-    if [ "$status" == ACTIVE ]; then
+    echo "$owner" | grep -q '^network:router_'
+    if [ $? -eq 0 ]; then
         device_id=$(get_port_attr "$1" device_id)
         if [ $? -ne 0 ]; then
             printf "get port device_id for %s failed\n" "$1"

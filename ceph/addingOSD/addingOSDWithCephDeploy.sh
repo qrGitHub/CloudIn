@@ -16,8 +16,8 @@ usage() {
 
 doCommand() {
     echo "^_^ doCommand: $*"
-    eval "$@"
-    [ $? -eq 0 ] || exit 1
+    eval "$*"
+    [ ${PIPESTATUS[0]} -eq 0 ] || exit 1
 }
 
 pkgDir=/opt/osdeploy/deploy/src/ceph/openstack-ceph-debpkgs

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 doCommand() {
-    echo "$*"
-    $*
-    [ $? -eq 0 ] || exit 1
+    echo "^_^ doCommand: $*"
+    eval "$*"
+    [ ${PIPESTATUS[0]} -eq 0 ] || exit 1
 }
 
 doCommand sudo dpkg -r salt-syndic

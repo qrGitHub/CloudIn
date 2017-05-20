@@ -11,7 +11,7 @@ usage() {
 
 doCommand() {
     echo "^_^ doCommand: $*"
-    eval "$@"
+    eval "$*"
     [ ${PIPESTATUS[0]} -eq 0 ] || exit 1
 }
 

@@ -2,6 +2,7 @@
 #-*- coding:utf-8 -*-
 
 # **********
+#   http://libguestfs.org/guestfs-faq.1.html#debugging-libguestfs
 # There are two methods to enable libguestfs debug
 #   1. bash method: export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
 #   2. api method: call g.set_verbose(True) and g.set_trace(True) before the call to launch

@@ -4,4 +4,4 @@ test -r /etc/keepalived/script/redis_common.sh && . /etc/keepalived/script/redis
 
 LOG Being master
 
-doCommand "$REDISCLI" -a "$PASSWORD" SLAVEOF NO ONE
+config_master

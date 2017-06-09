@@ -61,8 +61,8 @@ def main(user, host, password):
     \b
          python get_trove_userlist.py --user root --host 127.0.0.1 --password #@!@#
          python get_trove_userlist.py --host 223.202.85.16 --user zhangbingyin
-         python get_trove_userlist.py --host 123.59.26.133
-         python get_trove_userlist.py --host 123.59.184.133
+         python get_trove_userlist.py --host 123.59.26.133 --user zhangbingyin
+         python get_trove_userlist.py --host 123.59.184.133 --user zhangbingyin
     """
     env.hosts = '{0}@{1}'.format(user, host)
     env.password = password

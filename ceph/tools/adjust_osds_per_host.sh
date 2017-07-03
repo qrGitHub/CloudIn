@@ -72,10 +72,14 @@ out_per_osd() {
 
 out_osds_per_host() {
     doCommand ceph osd set noout
+    doCommand ceph osd set noscrub
+    doCommand ceph osd set nodeep-scrub
     doCommand stop ceph-osd-all
 
     adjust_osd_per_host out_per_osd "Out osd"
 
+    doCommand ceph osd unset nodeep-scrub
+    doCommand ceph osd unset noscrub
     doCommand ceph osd unset noout
 }
 

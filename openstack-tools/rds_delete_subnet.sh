@@ -27,8 +27,9 @@ get_port_attr() {
 delete_port() {
     owner=$(get_port_attr "$1" device_owner)
     if [ $? -ne 0 ]; then
-        printf "get port owner for %s failed\n" "$1"
-        return 1
+        # some port may not have device owner
+        doCommand neutron port-delete "$1"
+        return 0
     fi
 
     echo "$owner" | grep -q '^network:router_'

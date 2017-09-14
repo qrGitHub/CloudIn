@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#-*- coding:utf-8 -*-
 
 import subprocess
 import paramiko
@@ -118,7 +119,7 @@ def setPasswordless(hostname, port, username, password):
         print 'send public key failed'
         return ret
 
-    configSSHD(sc)
+    #configSSHD(sc)
 
     disconnectRemoteHost(sc)
 

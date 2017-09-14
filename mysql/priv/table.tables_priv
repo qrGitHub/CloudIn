@@ -1,0 +1,2 @@
+Table_priv	set('Select','Insert','Update','Delete','Create','Drop','Grant','References','Index','Alter','Create View','Show view','Trigger')
+Column_priv	set('Select','Insert','Update','References')

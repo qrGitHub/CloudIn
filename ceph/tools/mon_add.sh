@@ -23,7 +23,10 @@ doCommand mkdir -p /var/lib/ceph/mon/ceph-"$mon_id"
 doCommand ceph mon getmap -o "$map_file"
 
 # Prepare the monitor’s data directory created in the first step.
-doCommand ceph-mon -i "$mon_id" --mkfs --monmap "$map_file"
+#mon_keyring="/tmp/monkeyring"                                                          # 如开启cephx
+#doCommand ceph auth get mon. -o "$mon_keyring"                                         # 如开启cephx
+#doCommand ceph-mon -i "$mon_id" --mkfs --monmap "$map_file" --keyring "$mon_keyring"   # 如开启cephx
+doCommand ceph-mon -i "$mon_id" --mkfs --monmap "$map_file"                             # 未开启cephx
 
 # Start the new monitor and it will automatically join the cluster.
 doCommand ceph-mon -i "$mon_id" --public-addr "$mon_ip"

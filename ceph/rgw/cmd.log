@@ -1,0 +1,53 @@
+apt-get install radosgw
+
+create rgw pools
+
+name=ceph21
+mkdir -p /var/lib/ceph/radosgw/ceph-rgw.${name}
+ceph auth get-or-create client.rgw.${name} osd 'allow rwx' mon 'allow rw' -o /var/lib/ceph/radosgw/ceph-rgw.${name}/keyring
+touch /var/lib/ceph/radosgw/ceph-rgw.${name}/done
+chown -R ceph:ceph /var/lib/ceph/radosgw/ceph-rgw.${name}
+
+radosgw-admin realm create --rgw-realm=gold --default
+radosgw-admin zonegroup create --rgw-zonegroup=cloudin --endpoints=http://10.1.8.84:80,http://10.1.9.176:80 --rgw-realm=gold --master --default
+radosgw-admin zone create --rgw-zone=cloudin-bj1 --rgw-zonegroup=cloudin --endpoints=http://10.1.8.84:80 --master --default
+radosgw-admin user create --uid="synchronization-user" --display-name="Synchronization User" --system
+radosgw-admin zone modify --rgw-zone=cloudin-bj1 --access-key={system-key} --secret={secret}
+radosgw-admin period update --commit
+
+modify ceph conf && service radosgw start id=rgw.ceph21
+
+
+=============================================================================
+
+create rgw pools
+name=ceph31
+mkdir -p /var/lib/ceph/radosgw/ceph-rgw.${name}
+ceph auth get-or-create client.rgw.${name} osd 'allow rwx' mon 'allow rw' -o /var/lib/ceph/radosgw/ceph-rgw.${name}/keyring
+touch /var/lib/ceph/radosgw/ceph-rgw.${name}/done
+chown -R ceph:ceph /var/lib/ceph/radosgw/ceph-rgw.${name}
+
+radosgw-admin realm pull --url=http://10.1.8.84:80 --access-key={access-key} --secret={secret}
+radosgw-admin realm default --rgw-realm=gold
+radosgw-admin period pull --url={url-to-master-zone-gateway} --access-key={access-key} --secret={secret}
+radosgw-admin zone create --rgw-zone=cloudin-bj2 --rgw-zonegroup=cloudin --endpoints=http://10.1.9.176:80 --access-key={system-key} --secret={secret}
+PANICED
+radosgw-admin period update --commit
+modify ceph conf && service radosgw start id=rgw.ceph31
+   -1> 2017-06-26 14:44:52.006945 7facfc4f5700  1 -- 10.1.0.45:0/3555728450 <== osd.1 10.1.8.84:6800/1103 236 ==== osd_op_reply(1053 datalog.sync-status.0e1a387b-a78c-48c1-8537-fb68365e9ad9 [call] v0'0 uv0 ondisk = -16 ((16) Device or resource busy)) v7 ==== 176+0+0 (776610931 0 0) 0x7faccc005690 con 0x7facf0020750
+    0> 2017-06-26 14:44:52.007036 7facc0ff9700  1 -- 10.1.0.45:0/3555728450 --> 10.1.8.84:6800/1103 -- osd_op(client.414976.0:1055 146.80c75243 datalog.sync-status.0e1a387b-a78c-48c1-8537-fb68365e9ad9 [writefull 0~12] snapc 0=[] ondisk+write+known_if_redirected e610) v7 -- ?+0 0x7facec0111c0 con 0x7facf0020750
+
+
+
+
+radosgw-admin user create --uid=cloudin-bj1 --display-name="system user for the first zone in Beijing" --system
+
+#radosgw-admin realm create --rgw-realm=cloudin --default
+#radosgw-admin zonegroup create --rgw-zonegroup=bj1 --endpoints=http://10.1.8.84:80 --rgw-realm=cloudin --master --default
+#radosgw-admin zone create --rgw-zone=zone1 --rgw-zonegroup=bj1 --master --default
+#radosgw-admin user create --uid=cloudin.bj1 --display-name="user for BJ1" --system
+#radosgw-admin zone modify --rgw-zone=zone1 --access-key={system-key} --secret={secret}
+
+
+radosgw-admin user create --uid="cloudInS3User" --display-name="First User" --access-key="C6Y1E0C3EBXY0W8YIKEW" --secret="ZSU2IX3EBMFZoEKpMV8aNgGyMHBFhqwWnRzKz1fO" --rgw-zonegroup=cloudin --rgw-zone=cloudin-bj1
+radosgw-admin user create --uid="new_user" --display-name="Second User" --rgw-zonegroup=cloudin --rgw-zone=cloudin-bj1

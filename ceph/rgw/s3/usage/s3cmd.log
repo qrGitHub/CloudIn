@@ -1,0 +1,23 @@
+apt-get update && apt-get install -y s3cmd
+s3cmd --configure
+modify host_base and host_bucket in ~/.s3cfg
+s3cmd --help
+s3cmd ls
+s3cmd la
+s3cmd mb s3://LYB
+s3cmd rb -r s3://LYB
+s3cmd put MySQL-Sandbox-3.1.05.tar.gz s3://LYB
+s3cmd put --acl-public awsPublic.jpg s3://LYB
+s3cmd get s3://LYB/MySQL-Sandbox-3.1.05.tar.gz del.tgz
+s3cmd del s3://LYB/MySQL-Sandbox-3.1.05.tar.gz
+s3cmd info s3://LYB
+
+
+root@boto:~# s3cmd --multipart-chunk-size-mb=5 put trove.tgz s3://database_backups
+WARNING: Module python-magic is not available. Guessing MIME types based on file extensions.
+trove.tgz -> s3://database_backups/trove.tgz  [part 1 of 3, 5MB]
+ 5242880 of 5242880   100% in   69s    73.91 kB/s  done
+trove.tgz -> s3://database_backups/trove.tgz  [part 2 of 3, 5MB]
+ 5242880 of 5242880   100% in   72s    70.65 kB/s  done
+trove.tgz -> s3://database_backups/trove.tgz  [part 3 of 3, 1642kB]
+ 1681459 of 1681459   100% in   21s    75.15 kB/s  done

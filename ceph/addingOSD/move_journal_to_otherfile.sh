@@ -16,10 +16,12 @@ osdID=$1
 journalOldPath=$2
 journalNewPath=$3
 
+doCommand sudo ceph osd set noout
 doCommand sudo stop ceph-osd id=$osdID
 doCommand sudo ceph-osd --flush-journal -i $osdID
 sleep 2
 doCommand sudo mv $journalOldPath $journalNewPath
 doCommand sudo ln -s $journalNewPath $journalOldPath
 sleep 3
-doCommand start ceph-osd id=$osdID
+doCommand sudo start ceph-osd id=$osdID
+doCommand sudo ceph osd unset noout

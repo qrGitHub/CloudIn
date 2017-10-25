@@ -21,6 +21,6 @@ doCommand stop ceph-osd id=$osdID
 doCommand ceph-osd --flush-journal -i $osdID
 doCommand rm $journalPath
 doCommand ln -s $devicePath $journalPath
-doCommand ceph-osd -i $osdID --mkjournal
+doCommand ceph-osd --mkjournal -i $osdID
 doCommand start ceph-osd id=$osdID
 doCommand ceph osd unset noout

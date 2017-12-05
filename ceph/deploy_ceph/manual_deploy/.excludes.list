@@ -1,0 +1,5 @@
+.excludes.list
+.*.swp
+.swp
+copyToAIO.sh
+start_ceph_all.sh

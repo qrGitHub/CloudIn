@@ -21,3 +21,6 @@ trove.tgz -> s3://database_backups/trove.tgz  [part 2 of 3, 5MB]
  5242880 of 5242880   100% in   72s    70.65 kB/s  done
 trove.tgz -> s3://database_backups/trove.tgz  [part 3 of 3, 1642kB]
  1681459 of 1681459   100% in   21s    75.15 kB/s  done
+
+
+s3cmd setacl --acl-private s3://lyb

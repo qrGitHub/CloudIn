@@ -1,0 +1,12 @@
+.excludes.list
+.*.swp
+.swp
+copyToAdmin.sh
+cmd.log
+rgwDebug.sh
+keepalived
+rgwPoolCreate.sh
+rgwPoolDelete.sh
+simple_http_server.sh
+website
+deploy

@@ -6,14 +6,15 @@ import sys
 conn = boto.connect_s3(
         aws_access_key_id = '9I8980NI0DE7GMBHR4AL',
         aws_secret_access_key = 'CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2',
-        #is_secure = False, host = '172.16.1.107', port = 80,
-        is_secure = False, host = '172.16.1.103', port = 7480,
+        is_secure = False, host = '172.16.1.4', port = 7480,
         calling_format = boto.s3.connection.OrdinaryCallingFormat())
 
-bucket_name = 'LYB'
-obj_name = 'botoAPI.py'
+bucket_name = 'lyb'
+obj_name = 'cloudin-logo.png'
 
-print conn.lookup(bucket_name)
+bucket = conn.get_bucket(bucket_name)
+bucket.set_acl('private')
+
 #try:
 #    print conn.head_bucket(bucket_name)
 #except boto.exception.S3ResponseError as e:

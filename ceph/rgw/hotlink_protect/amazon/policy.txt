@@ -1,0 +1,46 @@
+# 策略的“Version”部分，网上的多数教程都是“2008-10-17”，这是旧版本的，目前最新的是“2012-10-17”。
+
+{
+    "Version": "2012-10-17",
+    "Id": "PreventHotLinking",
+    "Statement": [
+        {
+            "Sid": "Allow get requests referred by 192.168.63.232",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::cloudin-test/*",
+            "Condition": {
+                "StringLike": {"aws:Referer": ["http://192.168.63.232*"]}
+            }
+        },
+        {
+            "Sid": "Explicit deny to ensure requests are allowed only from specific referer.",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::cloudin-test/*",
+            "Condition": {
+                "StringNotLike": {"aws:Referer": ["http://192.168.63.232*"]}
+            }
+        }
+    ]
+}
+
+{
+    "Version": "2012-10-17",
+    "Id": "SourceIP",
+    "Statement": [
+        {
+            "Sid": "IPAllow",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::cloudin-test/*",
+            "Condition": {
+                "IpAddress": {"aws:SourceIp": "192.168.63.232/24"},
+                "NotIpAddress": {"aws:SourceIp": "192.168.63.233/32"}
+            }
+        }
+    ]
+}

@@ -1,0 +1,4 @@
+export OSS_TEST_ACCESS_KEY_ID=LTAIueV6lUoe9l1g
+export OSS_TEST_ACCESS_KEY_SECRET=oRZi4DbYPT5lPAqNOXWmerAC4qjiiY
+export OSS_TEST_BUCKET=777888qwe
+export OSS_TEST_ENDPOINT=oss-me-east-1.aliyuncs.com

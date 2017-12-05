@@ -1,0 +1,22 @@
+{
+    "parts": [
+        {"part_number":  1, "etag": "5D8FEFF86AAA46FE3E5F95B3B28535D1"},
+        {"part_number":  2, "etag": "F0230BCC64D0529F3A885AC0BDF3E2D4"},
+        {"part_number":  3, "etag": "85E6D653561672C7105DD38A7B09FC36"},
+        {"part_number":  4, "etag": "5E102A39AF057EFCB6FC4DEA1A67FC3B"},
+        {"part_number":  5, "etag": "829D7196CC7B4EA3992412D6DA85A2D5"},
+        {"part_number":  6, "etag": "8F591E75193AD32B434E8C1D5998C838"},
+        {"part_number":  7, "etag": "422CEA233169D1B151862A4E2EC4863A"},
+        {"part_number":  8, "etag": "4FFE27D175D6105469B2195FE8985EB1"},
+        {"part_number":  9, "etag": "1DB319711C0E9D4E004232F0CEF38E5A"},
+        {"part_number": 10, "etag": "5FC13292C2BB4704A33BFD764AF53A82"},
+        {"part_number": 11, "etag": "866338B10C8DD3C9D600D3B9D6473B26"}
+    ],
+    "upload_id": "7AC944E46F384D669DE4D842511B009F",
+    "key": "remote-multipart.txt",
+    "mtime": 1506333459.9615471,
+    "part_size": 102400,
+    "abspath": "/root/s3/ali/usage/qjrknevnizfkywugfbkoopthikzcptuh.txt",
+    "bucket": "777888qwe",
+    "size": 1048576
+}

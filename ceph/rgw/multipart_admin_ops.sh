@@ -5,8 +5,7 @@
 ak=9I8980NI0DE7GMBHR4AL
 sk=CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2
 
-zone0_endpoint=172.16.1.103:7480
-#zone0_endpoint=172.16.1.103:7480
+zone0_endpoint=172.16.1.4:7480
 zone1_endpoint=172.22.0.175:80
 zone2_endpoint=oss-bj2.cloudin.cn
 
@@ -37,7 +36,7 @@ list_multipart_uploads() {
     local header="${action}\n\n\n${date}\n/${uri}"
     local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
 
-    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" -L -X ${action} "http://${endpoint}/${uri}&format=json&${query}" -H "Host: ${endpoint}"
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" -L "http://${endpoint}/${uri}&format=json&${query}" -H "Host: ${endpoint}"
     echo
 }
 

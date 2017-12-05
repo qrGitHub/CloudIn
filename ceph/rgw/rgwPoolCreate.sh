@@ -20,6 +20,7 @@ rgw_pool_create_0_94_5() {
     pool_create .users 64
     pool_create .users.email 64
     pool_create .rgw.buckets.index 128
+    pool_create .rgw.buckets.extra 64
     pool_create .rgw.buckets 128
 }
 

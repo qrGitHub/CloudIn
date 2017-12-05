@@ -2,9 +2,35 @@ import botocore
 import boto3
 import sys
 
-s3 = boto3.resource('s3', endpoint_url = 'http://172.16.1.107')
-bucket_name = 'LYB'
-object_name = '8M'
+def test_put_bucket_cors(bucket_name):
+    bucket = s3.Bucket(bucket_name)
+    cors = bucket.Cors()
+    config = {
+        'CORSRules': [
+            {
+                'AllowedMethods': ['GET', 'PUT'],
+                'AllowedOrigins': ['*']
+            }
+        ]
+    }
+
+    print cors.put(CORSConfiguration = config)
+
+def test_del_bucket_cors(bucket_name):
+    bucket = s3.Bucket(bucket_name)
+    cors = bucket.Cors()
+    print cors.delete()
+
+s3 = boto3.resource('s3',
+        aws_secret_access_key='CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2',
+        aws_access_key_id='9I8980NI0DE7GMBHR4AL',
+        endpoint_url='http://172.16.1.4:7480')
+
+bucket_name = 'lyb'
+object_name = 'cloudin-logo.png'
+
+#test_put_bucket_cors(bucket_name)
+#test_del_bucket_cors(bucket_name)
 
 sys.exit()
 

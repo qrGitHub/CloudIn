@@ -25,3 +25,26 @@ bash addingOSD.sh 156 /dev/sdd6 0.650 "root=volumes-hp host=BJ-BGP01-003-03-hp"
 bash addingOSD.sh 157 /dev/sdb6 0.280 "root=volumes_hp host=BJ-BGP01-003-06-hp"
 bash addingOSD.sh 158 /dev/sdc5 0.670 "root=volumes-hp host=BJ-BGP01-003-06-hp"
 bash addingOSD.sh 159 /dev/sdd6 0.650 "root=volumes-hp host=BJ-BGP01-003-06-hp"
+
+
+gdisk /dev/sdl
+sgdisk -g -t 1:4FBD7E29-9D25-41B8-AFD0-062C0CEFF05D /dev/sdl
+
+
+mkdir -p /var/lib/ceph/osd/ceph-58
+mkfs.xfs /dev/sdl1
+mount -o rw,nodev,noexec,noatime,nodiratime,attr2,discard,nobarrier,inode64,logbsize=256k,noquota /dev/sdl1 /var/lib/ceph/osd/ceph-58
+ceph-osd -i 58 --mkfs --mkkey
+
+rm -f /var/lib/ceph/osd/ceph-58/journal
+ln -s /dev/sdc1 /var/lib/ceph/osd/ceph-58/journal
+ceph-osd -i 58 --mkjournal
+
+ceph auth add osd.58 osd 'allow *' mon 'allow rwx' -i /var/lib/ceph/osd/ceph-58/keyring
+ceph osd crush add 58 3.640 failure-domain=sata01 replica-domain=replica-a-01 osd-domain=osd-a-03
+ceph osd crush add 58 3.640 root=volumes-1 host=BJ-BGP01-003-01
+touch /var/lib/ceph/osd/ceph-58/upstart
+
+chown -R ceph:ceph /var/lib/ceph/osd/ceph-58/
+chown ceph:ceph /dev/sdc1
+start ceph-osd id=58

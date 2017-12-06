@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import boto3, json
-import pprint
+import pprint, os
 
 bucket_name = 'lyb'
 bucket_lifecycle_list = {
@@ -57,8 +57,8 @@ def del_bucket_policy(bucket_name):
 
 # creating a client
 s3client = boto3.client('s3',
-                        aws_secret_access_key = 'CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2',
-                        aws_access_key_id = '9I8980NI0DE7GMBHR4AL',
+                        aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                        aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                         endpoint_url = 'http://172.16.1.4:7480')
 
 #print_dict(bucket_lifecycle_list)

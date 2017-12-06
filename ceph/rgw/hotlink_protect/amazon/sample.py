@@ -2,8 +2,8 @@
 #-*- coding:utf-8 -*-
 import boto
 import boto.s3.connection
+import sys, os
 import json
-import sys
 import pprint
 
 bucket_name = 'myz'
@@ -86,10 +86,13 @@ bucket_policy_list = {
         },
 }
 
+access_key = os.environ.get('AWS_ACCESS_KEY_ID')
+secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
 # creating a client
 conn = boto.connect_s3(
-        aws_access_key_id = 'AKIAJ42XFG7XT2EC6SQA',
-        aws_secret_access_key = '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',
+        aws_access_key_id = access_key,
+        aws_secret_access_key = secret_key,
         is_secure = False, host = 's3.ap-northeast-1.amazonaws.com', port = 80,
         calling_format = boto.s3.connection.OrdinaryCallingFormat())
 

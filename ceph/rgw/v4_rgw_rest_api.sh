@@ -123,8 +123,8 @@ get_authorization_headers() {
 }
 
 algorithm=AWS4-HMAC-SHA256
-access_key="9I8980NI0DE7GMBHR4AL"
-secret_key="CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2"
+access_key=$AWS_ACCESS_KEY_ID
+secret_key=$AWS_SECRET_ACCESS_KEY
 endpoint="172.16.1.4:7480"
 uri=/lyb
 query_string="acl="

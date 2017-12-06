@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import boto3
 from botocore.client import Config
+import boto3, os
 
 def generate_url_sample(bucket_name, object_name):
     url = s3client.generate_presigned_url(ClientMethod='get_object',
@@ -13,12 +13,14 @@ def generate_url_sample(bucket_name, object_name):
                                           })
     print url
 
+access_key = os.environ.get('AWS_ACCESS_KEY_ID')
+secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
 # Get the service client with sigv4 configured
 s3client = boto3.client('s3',
                         config=Config(signature_version='s3v4'),
-			aws_secret_access_key='9GLb5OtXfImpqUX3LMP4rl2hClRJfk2mzbTEWAlV',
-			aws_access_key_id='AKIAJ42XFG7XT2EC6SQA',
+			aws_secret_access_key=secret_key,
+			aws_access_key_id=access_key,
                         region_name='ap-northeast-1')
 
 bucket_name = 'myz'

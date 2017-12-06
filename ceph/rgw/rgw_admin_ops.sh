@@ -1,17 +1,26 @@
 #!/bin/bash
 
-#ak=51BH4DAYS1LT2JBPVQ6D                     # admin user access key
-#sk=nGF25LzdvFcHyV1zhpSKA4DDRaiJqT5hLVmLie4z # admin user secret key
-ak=9I8980NI0DE7GMBHR4AL
-sk=CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2
+#ak=$ADMIN_ACCESS_KEY_ID                     # admin user access key
+#sk=$ADMIN_SECRET_ACCESS_KEY                 # admin user secret key
+ak=$AWS_ACCESS_KEY_ID
+sk=$AWS_SECRET_ACCESS_KEY
 
 zone0_endpoint=172.16.1.4:7480
 zone2_endpoint=oss-bj2.cloudin.cn
 zone3_endpoint=oss-bj3.cloudin.cn
 
-aws_ak=AKIAJ42XFG7XT2EC6SQA
-aws_sk=9GLb5OtXfImpqUX3LMP4rl2hClRJfk2mzbTEWAlV
+aws_ak=$AWS_ACCESS_KEY_ID
+aws_sk=$AWS_SECRET_ACCESS_KEY
 aws_endpoint=s3.ap-northeast-1.amazonaws.com
+
+# bucket policy list
+bucket_policy_list=(
+"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Action\": [\"s3:GetObject\"], \"Principal\": \"*\", \"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"AnonymousRead\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by 192.168.63.233\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:GetObject\", \"Condition\": {\"StringNotLikeIfExists\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by 192.168.63.233\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:GetObject\", \"Condition\": {\"Null\": {\"aws:Referer\": \"true\"}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by 192.168.63.233\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.233*\"]}, \"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:*\", \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"SpecificIPv4\", \"Statement\": [{\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Allow\", \"Sid\": \"IPAllow\", \"Action\": \"s3:GetObject\", \"Condition\": {\"NotIpAddress\": {\"aws:SourceIp\": \"10.3.0.101/32\"}, \"IpAddress\": {\"aws:SourceIp\": [\"10.3.0.0/24\", \"172.16.1.5/32\"]}}, \"Principal\": \"*\"}]}"
+)
 
 DATE() {
     date -u "+%a, %d %b %Y %H:%M:%S %Z"
@@ -96,7 +105,7 @@ _policy_action() {
     case $1 in
         PUT)
             curl -v -H "Content-Type: ${content_type}" -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" \
-                "http://${endpoint}/${uri}" -X ${method} -d "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Action\":[\"s3:GetObject\"],\"Principal\":\"*\",\"Resource\":[\"arn:aws:s3:::lyb/*\"],\"Effect\":\"Allow\",\"Sid\":\"AnonymousRead\"}]}"
+                "http://${endpoint}/${uri}" -X ${method} -d "${bucket_policy_list[$3]}"
             ;;
         GET)
             curl -v -H "Content-Type: ${content_type}" -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" \
@@ -110,7 +119,7 @@ _policy_action() {
 }
 
 put_bucket_policy() {
-    _policy_action PUT $1 $2
+    _policy_action PUT $1 $2 $3
 }
 
 get_bucket_policy() {
@@ -234,7 +243,7 @@ case $1 in
         printf "\tbash %s 0 delete_bucket <bucket>\n" "$0"
         printf "\tbash %s 0 put_bucket_acl <bucket> <private|public-read|public-read-write|authenticated-read>\n" "$0"
         printf "\tbash %s 0 get_bucket_acl <bucket>\n" "$0"
-        printf "\tbash %s 0 put_bucket_policy <bucket> <policy>\n" "$0"
+        printf "\tbash %s 0 put_bucket_policy <bucket> <0-4>\n" "$0"
         printf "\tbash %s 0 get_bucket_policy <bucket>\n" "$0"
         printf "\tbash %s 0 del_bucket_policy <bucket>\n" "$0"
         printf "\tbash %s 0 put_object_tag <bucket> <object> <tag>\n" "$0"

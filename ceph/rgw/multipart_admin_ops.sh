@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#ak=51BH4DAYS1LT2JBPVQ6D                     # admin user access key
-#sk=nGF25LzdvFcHyV1zhpSKA4DDRaiJqT5hLVmLie4z # admin user secret key
-ak=9I8980NI0DE7GMBHR4AL
-sk=CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2
+#ak=$ADMIN_ACCESS_KEY_ID                     # admin user access key
+#sk=$ADMIN_SECRET_ACCESS_KEY                 # admin user secret key
+ak=$AWS_ACCESS_KEY_ID
+sk=$AWS_SECRET_ACCESS_KEY
 
 zone0_endpoint=172.16.1.4:7480
 zone1_endpoint=172.22.0.175:80

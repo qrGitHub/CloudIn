@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 
 import boto3, json
-import pprint
+import pprint, os
 
 bucket_name = 'lyb'
 bucket_policy_list = {
@@ -141,6 +141,11 @@ def print_dict(dictionary):
     pp = pprint.PrettyPrinter(indent=1, width=80, depth=None, stream=None)
     pp.pprint(dictionary)
 
+def dict2string(dictionary):
+    for name in dictionary:
+        string_policy = json.dumps(dictionary[name]).replace('"', '\\"')
+        print '{0}\n"{1}"\n'.format(name, string_policy)
+
 def put_bucket_policy(bucket_name, bucket_policy):
     # Convert the policy to a JSON string
     bucket_policy = json.dumps(bucket_policy)
@@ -161,11 +166,12 @@ def del_bucket_policy(bucket_name):
 
 # creating a client
 s3client = boto3.client('s3',
-                        aws_secret_access_key = 'CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2',
-                        aws_access_key_id = '9I8980NI0DE7GMBHR4AL',
+                        aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                        aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                         endpoint_url = 'http://172.16.1.4:7480')
 
 #print_dict(bucket_policy_list)
+#dict2string(bucket_policy_list)
 put_bucket_policy(bucket_name, bucket_policy_list['AnonymousRead']) # PreventHotLinkingAllowNull PreventHotLinkingDenyNull[1-2] AnonymousRead SpecificIPv4
 #get_bucket_policy(bucket_name)
 #del_bucket_policy(bucket_name)

@@ -2,11 +2,11 @@
 #-*- coding:utf-8 -*-
 
 from botocore.client import Config
-import pprint, sys
+import pprint, sys, os
 import boto3
 
-sk = 'CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2'
-ak = '9I8980NI0DE7GMBHR4AL'
+sk = os.environ.get('AWS_SECRET_ACCESS_KEY')
+ak = os.environ.get('AWS_ACCESS_KEY_ID')
 endpoint = 'http://172.16.1.4:7480'
 
 def put_bucket_acl(bucket_name, acl):

@@ -1,6 +1,6 @@
 import boto
 import boto.s3.connection
-import sys
+import sys, os
 
 def put_bucket_acl(bucket_name, **kwargs):
     bucket = conn.get_bucket(bucket_name)
@@ -16,8 +16,8 @@ def test_bucket_acl(bucket_name):
 
 # creating a client
 conn = boto.connect_s3(
-        aws_access_key_id = '9I8980NI0DE7GMBHR4AL',
-        aws_secret_access_key = 'CoDeyVzuRtZD28T8tJpMYStgGQPG4spRT5ioT4b2',
+        aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
         is_secure = False, host = '172.16.1.4', port = 7480,
         calling_format = boto.s3.connection.OrdinaryCallingFormat())
 

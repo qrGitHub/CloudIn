@@ -21,12 +21,9 @@ def test_del_bucket_cors(bucket_name):
     cors = bucket.Cors()
     print cors.delete()
 
-access_key = os.environ.get('AWS_ACCESS_KEY_ID')
-secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
 s3 = boto3.resource('s3',
-        aws_secret_access_key=secret_key,
-        aws_access_key_id=access_key,
+        aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+        aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
         endpoint_url='http://172.16.1.4:7480')
 
 bucket_name = 'lyb'

@@ -86,13 +86,10 @@ bucket_policy_list = {
         },
 }
 
-access_key = os.environ.get('AWS_ACCESS_KEY_ID')
-secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
 # creating a client
 conn = boto.connect_s3(
-        aws_access_key_id = access_key,
-        aws_secret_access_key = secret_key,
+        aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
+        aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
         is_secure = False, host = 's3.ap-northeast-1.amazonaws.com', port = 80,
         calling_format = boto.s3.connection.OrdinaryCallingFormat())
 

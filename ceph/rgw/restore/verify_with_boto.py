@@ -4,15 +4,12 @@ from filechunkio import FileChunkIO
 import boto, boto.s3.connection
 import os, math, sys, time
 
-access_key = os.environ.get('AWS_ACCESS_KEY_ID')
-secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
-#obj = boto.connect_s3(aws_access_key_id = access_key,
-#                      aws_secret_access_key = secret_key,
+#obj = boto.connect_s3(aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
+#                      aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
 #                      is_secure = False, host = '172.16.1.107', port = 80,
 #                      calling_format = boto.s3.connection.OrdinaryCallingFormat())
-obj = boto.connect_s3(aws_access_key_id = access_key,
-                      aws_secret_access_key = secret_key,
+obj = boto.connect_s3(aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
+                      aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
                       is_secure = False, host = '172.16.1.103', port = 7480,
                       #is_secure = False, host = '172.16.1.108', port = 7480,
                       calling_format = boto.s3.connection.OrdinaryCallingFormat())

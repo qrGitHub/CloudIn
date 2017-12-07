@@ -13,14 +13,11 @@ def generate_url_sample(bucket_name, object_name):
                                           })
     print url
 
-access_key = os.environ.get('AWS_ACCESS_KEY_ID')
-secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
 # Get the service client with sigv4 configured
 s3client = boto3.client('s3',
                         config=Config(signature_version='s3v4'),
-			aws_secret_access_key=secret_key,
-			aws_access_key_id=access_key,
+			aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
+			aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
                         region_name='ap-northeast-1')
 
 bucket_name = 'myz'

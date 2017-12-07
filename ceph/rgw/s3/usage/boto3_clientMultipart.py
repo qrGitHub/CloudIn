@@ -4,13 +4,10 @@ from filechunkio import FileChunkIO
 import boto3
 import sys, os, math
 
-access_key = os.environ.get('AWS_ACCESS_KEY_ID')
-secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
 # creating a client
 s3 = boto3.client('s3',
-                  aws_secret_access_key = secret_key,
-                  aws_access_key_id = access_key,
+                  aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
+                  aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                   endpoint_url = 'http://172.16.1.107')
 bucket_name = 'lyb'
 obj_name = 'multipart_test'

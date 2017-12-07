@@ -2,15 +2,12 @@
 
 #ak=$ADMIN_ACCESS_KEY_ID                     # admin user access key
 #sk=$ADMIN_SECRET_ACCESS_KEY                 # admin user secret key
-ak=$AWS_ACCESS_KEY_ID
-sk=$AWS_SECRET_ACCESS_KEY
+ak=${AWS_ACCESS_KEY_ID:?"has a invalid value"}
+sk=${AWS_SECRET_ACCESS_KEY:?"has a invalid value"}
 
 zone0_endpoint=172.16.1.4:7480
 zone2_endpoint=oss-bj2.cloudin.cn
 zone3_endpoint=oss-bj3.cloudin.cn
-
-aws_ak=$AWS_ACCESS_KEY_ID
-aws_sk=$AWS_SECRET_ACCESS_KEY
 aws_endpoint=s3.ap-northeast-1.amazonaws.com
 
 # bucket policy list
@@ -226,8 +223,6 @@ case $1 in
         shift
         ;;
     aws)
-        ak=$aws_ak
-        sk=$aws_sk
         endpoint=$aws_endpoint
         shift
         ;;

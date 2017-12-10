@@ -16,3 +16,4 @@ doCommand() {
 
 doCommand stop ceph-mon id="$mon_id"
 doCommand ceph mon remove "$mon_id"
+doCommand rm -rf /var/lib/ceph/mon/ceph-${mon_id}

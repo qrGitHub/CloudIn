@@ -7,11 +7,11 @@ from filechunkio import FileChunkIO
 import sys
 
 host = '223.202.85.133'
-access_key = 'AZD825D606QBJ1DL2CAA'
-secret_key = 'v1YXOIbEI9WeDoMMDBoD8tq5nEgYGzmXLngyfP2r'
+sk = os.environ.get('AWS_SECRET_ACCESS_KEY')
+ak = os.environ.get('AWS_ACCESS_KEY_ID')
 
 #Connect to S3
-c = boto.connect_s3(aws_access_key_id = access_key, aws_secret_access_key = secret_key,
+c = boto.connect_s3(aws_access_key_id = ak, aws_secret_access_key = sk,
                 host = host, is_secure = False, calling_format = boto.s3.connection.OrdinaryCallingFormat())
 
 b = c.get_bucket('boto3Bucket')

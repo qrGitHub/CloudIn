@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import boto3
+import boto3, os
 
 # creating a client
 s3client = boto3.client('s3',
-			aws_secret_access_key = '43h4cOsPSrdsDuYqzEyzs4Ehh4PE0fcXvkxuF17y',
-			aws_access_key_id = 'EZIV6HA0S8QLOU1KDMWA',
+			aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
+			aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
                         endpoint_url = 'http://123.59.184.136:80')
 
 # creating a bucket

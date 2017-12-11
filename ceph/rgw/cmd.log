@@ -49,5 +49,5 @@ radosgw-admin user create --uid=cloudin-bj1 --display-name="system user for the 
 #radosgw-admin zone modify --rgw-zone=zone1 --access-key={system-key} --secret={secret}
 
 
-radosgw-admin user create --uid="cloudInS3User" --display-name="First User" --access-key="C6Y1E0C3EBXY0W8YIKEW" --secret="ZSU2IX3EBMFZoEKpMV8aNgGyMHBFhqwWnRzKz1fO" --rgw-zonegroup=cloudin --rgw-zone=cloudin-bj1
+radosgw-admin user create --uid="cloudInS3User" --display-name="First User" --access-key=<ak> --secret=<sk> --rgw-zonegroup=cloudin --rgw-zone=cloudin-bj1
 radosgw-admin user create --uid="new_user" --display-name="Second User" --rgw-zonegroup=cloudin --rgw-zone=cloudin-bj1

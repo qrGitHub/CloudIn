@@ -1,0 +1,1 @@
+../debpkg-0.94.5/checkInstalled.sh

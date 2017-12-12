@@ -9,6 +9,10 @@ import pprint
 bucket_name = 'myz'
 key_name = 'cloudin-logo.png'
 
+sk = os.environ.get('AWS_SECRET_ACCESS_KEY')
+ak = os.environ.get('AWS_ACCESS_KEY_ID')
+host = os.environ.get('AWS_HOST')
+
 bucket_policy_list = {
         'AnonymousRead': {
             'Version':'2012-10-17',
@@ -86,13 +90,6 @@ bucket_policy_list = {
         },
 }
 
-# creating a client
-conn = boto.connect_s3(
-        aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY'),
-        is_secure = False, host = 's3.ap-northeast-1.amazonaws.com', port = 80,
-        calling_format = boto.s3.connection.OrdinaryCallingFormat())
-
 def print_dict(dictionary):
     pp = pprint.PrettyPrinter(indent=1, width=80, depth=None, stream=None)
     pp.pprint(dictionary)
@@ -101,11 +98,23 @@ def get_all_buckets_sample():
     for bucket in conn.get_all_buckets():
         print "{name}\t{created}".format(name = bucket.name, created = bucket.creation_date)
 
-def generate_url_sample(bucket_name, key_name):
-    url_enabled = conn.generate_url(86400, 'GET', bucket=bucket_name, key=key_name, query_auth=True)
-    url_disabled = conn.generate_url(86400, 'GET', bucket=bucket_name, key=key_name, query_auth=False)
-    print "{0}".format(url_enabled)
-    print "{0}".format(url_disabled)
+def generate_url_v2_sample(bucket_name, key_name):
+    print conn.generate_url(86400, 'GET', bucket=bucket_name, key=key_name, query_auth=True)
+    print conn.generate_url(86400, 'GET', bucket=bucket_name, key=key_name, query_auth=False)
+
+def generate_url_v4_sample(bucket_name, key_name):
+    if not boto.config.get('s3', 'use-sigv4'):
+        boto.config.add_section('s3')
+        boto.config.set('s3', 'use-sigv4', 'True')
+
+    # Get the service client with sigv4 configured
+    s3 = boto.connect_s3(
+            aws_access_key_id = ak,
+            aws_secret_access_key = sk,
+            is_secure = False, host = host, port = 80,
+            calling_format = boto.s3.connection.OrdinaryCallingFormat())
+
+    print s3.generate_url_sigv4(86400, 'GET', bucket=bucket_name, key=key_name)
 
 def get_policy_sample(bucket_name):
     bucket = conn.get_bucket(bucket_name)
@@ -129,9 +138,17 @@ def delete_policy_sample(bucket_name):
     bucket = conn.get_bucket(bucket_name)
     print bucket.delete_policy()
 
+# creating a client
+conn = boto.connect_s3(
+        aws_access_key_id = ak,
+        aws_secret_access_key = sk,
+        is_secure = False, host = host, port = 80,
+        calling_format = boto.s3.connection.OrdinaryCallingFormat())
+
 #print_dict(bucket_policy_list)
 #get_all_buckets_sample()
-#generate_url_sample(bucket_name, key_name)
-delete_policy_sample(bucket_name)
-set_policy_sample(bucket_name, bucket_policy_list['SpecificIPv4']) # PreventHotLinking AnonymousRead
-get_policy_sample(bucket_name)
+#generate_url_v2_sample(bucket_name, key_name)
+generate_url_v4_sample(bucket_name, key_name)
+#delete_policy_sample(bucket_name)
+#set_policy_sample(bucket_name, bucket_policy_list['SpecificIPv4']) # PreventHotLinking AnonymousRead
+#get_policy_sample(bucket_name)

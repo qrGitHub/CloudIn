@@ -28,7 +28,7 @@ def get_object_acl(bucket_name, object_name):
 def get_object_url(s3, bucket_name, object_name):
     # Generate the URL to get 'object_name' from 'bucket_name'
     return s3.generate_presigned_url(ClientMethod='get_object',
-                                     ExpiresIn = 60,
+                                     ExpiresIn = 86400,
                                      Params = {
                                          'Bucket': bucket_name,
                                          'Key': object_name

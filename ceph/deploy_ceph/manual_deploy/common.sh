@@ -7,13 +7,18 @@ doCommand() {
 }
 
 stop_process() {
-    local pid=$1 fpn="$2"
+    local pfn="$1" pid
+
+    pid=$(pgrep -f "$pfn")
+    if [ $? -ne 0 ]; then
+        return 0
+    fi
 
     doCommand kill "$pid"
     # Waiting for the process exits
     while :
     do
-        pgrep -f "$fpn" > /dev/null
+        pgrep -f "$pfn" > /dev/null
         if [ $? -ne 0 ]; then
             break
         fi
@@ -23,12 +28,8 @@ stop_process() {
 }
 
 restart_process() {
-    local pfn="$1" pid
+    local pfn="$1"
 
-    pid=$(pgrep -f "$pfn")
-    if [ $? -eq 0 ]; then
-        stop_process $pid "$pfn"
-    fi
-
+    stop_process "$pfn"
     doCommand "$pfn"
 }

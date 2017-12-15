@@ -44,7 +44,7 @@ rgw_pool_delete_10_2_5() {
 }
 
 rgw_pool_delete_12_2_1() {
-    rgw_pool_delete_10_2_5
+    rgw_pool_delete_10_2_5 $1
 }
 
 zone=${1:-default} && rgw_pool_delete_12_2_1 $zone

@@ -9,6 +9,18 @@ sk = os.environ.get('AWS_SECRET_ACCESS_KEY')
 ak = os.environ.get('AWS_ACCESS_KEY_ID')
 endpoint = 'http://172.16.1.4:7480'
 
+bucket_cors_list = {
+    'demo1': {
+        'CORSRules': [
+            {
+                'AllowedMethods': ['GET', 'PUT'],
+                'AllowedOrigins': ['*']
+            }
+        ]
+    },
+
+}
+
 def put_bucket_acl(bucket_name, acl):
     return s3client.put_bucket_acl(ACL=acl, Bucket=bucket_name)
 
@@ -52,6 +64,17 @@ def get_object_url_v4(bucket_name, object_name):
 
     print get_object_url(s3, bucket_name, object_name)
 
+def put_bucket_cors(bucket_name, cors):
+    return s3client.put_bucket_cors(Bucket=bucket_name, CORSConfiguration=cors)
+
+def get_bucket_cors(bucket_name):
+    result = s3client.get_bucket_cors(Bucket=bucket_name)
+    pp = pprint.PrettyPrinter(indent=1, width=80, depth=None, stream=None)
+    pp.pprint(result)
+
+def del_bucket_cors(bucket_name):
+    return s3client.delete_bucket_cors(Bucket=bucket_name)
+
 # creating a client
 s3client = boto3.client('s3',
                         aws_secret_access_key = sk,
@@ -61,8 +84,12 @@ s3client = boto3.client('s3',
 bucket_name = 'lyb'
 object_name='cloudin-logo.png'
 #put_bucket_acl(bucket_name, 'private') # private public-read public-read-write authenticated-read
-get_object_url_v2(bucket_name, object_name)
+#get_object_url_v2(bucket_name, object_name)
 #get_object_url_v4(bucket_name, object_name)
+
+#put_bucket_cors(bucket_name, bucket_cors_list['demo1'])
+get_bucket_cors(bucket_name)
+#del_bucket_cors(bucket_name)
 
 #get_bucket_acl(bucket_name)
 #put_object_acl(bucket_name, object_name, 'private')

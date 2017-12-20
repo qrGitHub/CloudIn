@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
+from boto.s3.lifecycle import Lifecycle, Rule, Expiration, Transitions
 import boto.s3.connection
 import boto, os
 
@@ -107,6 +111,24 @@ def get_object_url_v4(bucket_name, object_name):
 
     print s3.generate_url_sigv4(86400, 'GET', bucket=bucket_name, key=object_name)
 
+def put_bucket_lifecycle(bucket_name):
+    expiration = Expiration(days=30)
+    rule = Rule(id='demo1', prefix='test', status='Enabled', expiration=expiration)
+    lifecycle = Lifecycle()
+    lifecycle.append(rule)
+
+    bucket = conn.get_bucket(bucket_name)
+    return bucket.configure_lifecycle(lifecycle)
+
+def get_bucket_lifecycle(bucket_name):
+    bucket = conn.get_bucket(bucket_name)
+    response = bucket.get_lifecycle_config()
+    print response.to_xml()
+
+def del_bucket_lifecycle(bucket_name):
+    bucket = conn.get_bucket(bucket_name)
+    return bucket.delete_lifecycle_configuration()
+
 # creating a client
 conn = boto.connect_s3(
         aws_access_key_id = ak,
@@ -133,4 +155,8 @@ object_name = 'cloudin-logo.png'
 #get_objects4bucket(bucket_name)
 #get_all_objects()
 #get_object_url_v2(bucket_name, object_name)
-get_object_url_v4(bucket_name, object_name)
+#get_object_url_v4(bucket_name, object_name)
+
+get_bucket_lifecycle(bucket_name)
+#print del_bucket_lifecycle(bucket_name)
+#print put_bucket_lifecycle(bucket_name)

@@ -18,6 +18,33 @@ bucket_policy_list=(
 "{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by 192.168.63.233\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.233*\"]}, \"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:*\", \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}]}"
 "{\"Version\": \"2012-10-17\", \"Id\": \"SpecificIPv4\", \"Statement\": [{\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Allow\", \"Sid\": \"IPAllow\", \"Action\": \"s3:GetObject\", \"Condition\": {\"NotIpAddress\": {\"aws:SourceIp\": \"10.3.0.101/32\"}, \"IpAddress\": {\"aws:SourceIp\": [\"10.3.0.0/24\", \"172.16.1.5/32\"]}}, \"Principal\": \"*\"}]}"
 )
+bucket_lifecycle_list=(
+'<?xml version="1.0" encoding="UTF-8"?>
+<LifecycleConfiguration>
+    <Rule>
+        <ID>demo1</ID>
+        <Status>Enabled</Status>
+        <Prefix>test</Prefix>
+        <Expiration>
+            <Days>30</Days>
+        </Expiration>
+    </Rule>
+</LifecycleConfiguration>'
+'<?xml version="1.0" encoding="UTF-8"?>
+<LifecycleConfiguration>
+    <Rule>
+        <ID>demo2</ID>
+        <Status>Enabled</Status>
+        <Prefix>/abc</Prefix>
+        <Expiration>
+            <Days>123</Days>
+        </Expiration>
+        <AbortIncompleteMultipartUpload>
+            <DaysAfterInitiation>123</DaysAfterInitiation>
+        </AbortIncompleteMultipartUpload>
+    </Rule>
+</LifecycleConfiguration>'
+)
 
 DATE() {
     date -u "+%a, %d %b %Y %H:%M:%S %Z"
@@ -209,6 +236,40 @@ get_object() {
     fi
 }
 
+put_bucket_lc() {
+    local uri=$1?lifecycle
+    local date=$(DATE)
+    local method=PUT
+    local content_type=application/xml
+    local content_md5=$(/root/.oss/bin/python content_md5.py "${bucket_lifecycle_list[$2]}")
+    local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
+    local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
+
+    curl -v -H "Content-Md5: ${content_md5}" -H "Content-Type: ${content_type}" \
+            -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" \
+            "http://${endpoint}/${uri}" -X ${method} -d "${bucket_lifecycle_list[$2]}"
+}
+
+get_bucket_lc() {
+    local uri=$1?lifecycle
+    local date=$(DATE)
+    local method=GET content_md5 content_type
+    local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
+    local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
+
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}&format=json" | python -m json.tool
+}
+
+del_bucket_lc() {
+    local uri=$1?lifecycle
+    local date=$(DATE)
+    local method=DELETE content_md5 content_type
+    local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
+    local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
+
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}" -X ${method}
+}
+
 case $1 in
     0)
         endpoint=$zone0_endpoint
@@ -244,6 +305,9 @@ case $1 in
         printf "\tbash %s 0 put_object_tag <bucket> <object> <tag>\n" "$0"
         printf "\tbash %s 0 get_object_tag <bucket> <object>\n" "$0"
         printf "\tbash %s 0 del_object_tag <bucket> <object>\n" "$0"
+        printf "\tbash %s 0 put_bucket_lc <bucket> <0-1>\n" "$0"
+        printf "\tbash %s 0 get_bucket_lc <bucket>\n" "$0"
+        printf "\tbash %s 0 del_bucket_lc <bucket>\n" "$0"
         exit 1
 esac
 

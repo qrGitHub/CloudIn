@@ -241,7 +241,7 @@ put_bucket_lc() {
     local date=$(DATE)
     local method=PUT
     local content_type=application/xml
-    local content_md5=$(/root/.oss/bin/python content_md5.py "${bucket_lifecycle_list[$2]}")
+    local content_md5=$(echo -n "${bucket_lifecycle_list[$2]}" | openssl dgst -md5 -binary | openssl enc -base64)
     local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
     local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
 

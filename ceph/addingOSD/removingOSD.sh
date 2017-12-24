@@ -15,8 +15,9 @@ fi
 osdID=$1
 osdDevice=$2
 
-doCommand ceph osd out $osdID
+doCommand ceph osd crush reweight osd.${osdID} 0
 echo "Wait until the migration completes"
+doCommand ceph osd out $osdID
 doCommand sudo stop ceph-osd id=$osdID
 doCommand sudo ceph osd crush remove osd.$osdID
 doCommand sudo ceph auth del osd.$osdID

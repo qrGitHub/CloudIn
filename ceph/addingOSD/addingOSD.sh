@@ -39,9 +39,10 @@ osdDir=/var/lib/ceph/osd/ceph-$osdID
 
 doCommand ceph osd create
 doCommand sudo mkdir -p $osdDir
-doCommand sudo mkfs.xfs $osdDevice
-doCommand sudo mount -o rw,noatime,inode64,logbsize=256k,delaylog $osdDevice $osdDir
+doCommand sudo mkfs.xfs -f $osdDevice
+doCommand sudo mount -o rw,noexec,nodev,noatime,nodiratime,attr2,nobarrier,inode64,logbsize=256k,noquota $osdDevice $osdDir
 doCommand sudo ceph-osd -i $osdID --mkfs --mkkey
+echo "move journal to device if exists"
 doCommand sudo ceph auth add osd.$osdID osd \'allow *\' mon \'allow rwx\' -i $osdDir/keyring
 doCommand sudo ceph osd crush add $osdID $weight $bucket
 doCommand sudo touch $osdDir/upstart
@@ -51,4 +52,5 @@ echo "Prepare file /etc/ceph/ceph.conf and scp it to other hosts"
 
 echo -e "\nIf there are several OSDs to be added, DO NOT start their OSD deamons alone;"
 echo "The following command should be running together in the last"
+doCommand sudo chown -R ceph:ceph $osdDir
 doCommand sudo start ceph-osd id=$osdID

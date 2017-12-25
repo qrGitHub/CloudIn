@@ -1,5 +1,6 @@
 .excludes.list
 .*.swp
+*.pyc
 .swp
 copyToAdmin.sh
 cmd.log

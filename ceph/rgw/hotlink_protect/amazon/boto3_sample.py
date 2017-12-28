@@ -18,7 +18,8 @@ s3client = boto3.client('s3',
                         config=Config(signature_version='s3v4'),
 			aws_secret_access_key=os.environ.get('AWS_SECRET_ACCESS_KEY'),
 			aws_access_key_id=os.environ.get('AWS_ACCESS_KEY_ID'),
-                        region_name='ap-northeast-1')
+                        endpoint_url='http://' + os.environ.get('AWS_HOST'),
+                        region_name=os.environ.get('AWS_REGION'))
 
 bucket_name = 'myz'
 object_name='cloudin-logo.png'

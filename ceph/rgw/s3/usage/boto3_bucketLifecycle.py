@@ -33,6 +33,18 @@ bucket_lifecycle_list = {
             },
         ]
     },
+    'invalid': {
+        'Rules': [
+            {
+                'ID': 'invalid',
+                'Prefix': 'test',
+                'Status': 'Enabled',
+                'Expiration': {
+                    'Days': 30,
+                },
+            },
+        ]
+    },
 }
 
 def print_dict(dictionary):
@@ -63,6 +75,6 @@ s3client = boto3.client('s3',
                         endpoint_url = endpoint)
 
 #print_dict(bucket_lifecycle_list)
-put_bucket_lifecycle(bucket_name, bucket_lifecycle_list['demo1'])
-get_bucket_lifecycle(bucket_name)
+put_bucket_lifecycle(bucket_name, bucket_lifecycle_list['invalid'])
+#get_bucket_lifecycle(bucket_name)
 #del_bucket_lifecycle(bucket_name)

@@ -9,6 +9,7 @@ bucket_policy_list = {
                 'Sid':'SpecificPrincipal',
                 'Effect':'Allow',
                 'Principal': {'AWS': ['arn:aws:iam:::user/normal']},
+                #'Principal': {'CanonicalUser':'64-digit-alphanumeric-value'}, # unsupported yet
                 'Action':['s3:GetObject'],
                 'Resource':['arn:aws:s3:::%s/*' % bucket_name ]
             }]
@@ -45,7 +46,7 @@ bucket_policy_list = {
             'Id': 'PreventHotLinking',
             'Statement': [
                 {
-                    'Sid': 'Allow get requests referred by 192.168.63.233',
+                    'Sid': 'Allow get requests referred by specific IP',
                     'Effect': 'Allow',
                     'Principal': '*',
                     'Action': ['s3:GetObject'],
@@ -74,7 +75,7 @@ bucket_policy_list = {
             'Id': 'PreventHotLinking',
             'Statement': [
                 {
-                    'Sid': 'Allow get requests referred by 192.168.63.233',
+                    'Sid': 'Allow get requests referred by specific IP',
                     'Effect': 'Allow',
                     'Principal': '*',
                     'Action': ['s3:GetObject'],
@@ -102,7 +103,7 @@ bucket_policy_list = {
             'Id': 'PreventHotLinking',
             'Statement': [
                 {
-                    'Sid': 'Allow get requests referred by 192.168.63.233',
+                    'Sid': 'Allow get requests referred by specific IP',
                     'Effect': 'Allow',
                     'Principal': '*',
                     'Action': ['s3:GetObject'],

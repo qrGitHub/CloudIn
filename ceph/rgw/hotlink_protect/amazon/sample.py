@@ -71,23 +71,6 @@ bucket_policy_list = {
                 }
             ]
         },
-        'match_wildcards_bug': {
-            'Version': '2012-10-17',
-            'Id': 'match_wildcards_bug',
-            'Statement': [
-                {
-                    'Sid': 'Explicit deny for specific referer',
-                    'Effect': 'Deny',
-                    'Principal': '*',
-                    'Action': 's3:GetObject',
-                    'Resource': 'arn:aws:s3:::%s/*' % bucket_name,
-                    'Condition': {
-                        'StringLike': {'aws:Referer': ['http://192.*32*']}
-                        #'StringLike': {'aws:Referer': ['http://192.168.63.232*']}
-                    }
-                }
-            ]
-        },
 }
 
 def print_dict(dictionary):
@@ -146,9 +129,9 @@ conn = boto.connect_s3(
         calling_format = boto.s3.connection.OrdinaryCallingFormat())
 
 #print_dict(bucket_policy_list)
-#get_all_buckets_sample()
+get_all_buckets_sample()
 #generate_url_v2_sample(bucket_name, key_name)
-generate_url_v4_sample(bucket_name, key_name)
+#generate_url_v4_sample(bucket_name, key_name)
 #delete_policy_sample(bucket_name)
 #set_policy_sample(bucket_name, bucket_policy_list['SpecificIPv4']) # PreventHotLinking AnonymousRead
 #get_policy_sample(bucket_name)

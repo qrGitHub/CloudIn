@@ -5,9 +5,9 @@
 ak=$AWS_ACCESS_KEY_ID
 sk=$AWS_SECRET_ACCESS_KEY
 
-zone0_endpoint=172.16.1.4:7480
-zone1_endpoint=172.22.0.175:80
+zone0_endpoint=$AWS_HOST
 zone2_endpoint=oss-bj2.cloudin.cn
+zone3_endpoint=oss-bj3.cloudin.cn
 
 DATE() {
     date -u "+%a, %d %b %Y %H:%M:%S %Z"
@@ -26,38 +26,36 @@ url_quote() {
 
 list_multipart_uploads() {
     local uri=$1/?uploads
+    local date=$(DATE)
+    local method=GET content_md5 content_type
+    local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
+    local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
     local query="key-marker=$2"
     if [ ! -z "$3" ]; then
         query="$query&upload-id-marker="$(url_quote "$3")
     fi
 
-    local date=$(DATE)
-    local action=GET
-    local header="${action}\n\n\n${date}\n/${uri}"
-    local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
-
-    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" -L "http://${endpoint}/${uri}&format=json&${query}" -H "Host: ${endpoint}"
-    echo
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}&format=json&${query}" | python -m json.tool
 }
 
 get_all_parts() {
     local uri=$1/$2?uploadId=$3
     local date=$(DATE)
-    local action=GET
-    local header="${action}\n\n\n${date}\n/${uri}"
+    local method=GET content_md5 content_type
+    local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
     local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
 
-    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" -L -X ${action} "http://${endpoint}/${uri}&format=json" -H "Host: ${endpoint}" | python -m json.tool
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}&format=json" | python -m json.tool
 }
 
 abort_multipart_upload() {
     local uri=$1/$2?uploadId=$3
     local date=$(DATE)
-    local action=DELETE
-    local header="${action}\n\n\n${date}\n/${uri}"
+    local method=DELETE content_md5 content_type
+    local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
     local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
 
-    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" -L -X ${action} "http://${endpoint}/${uri}&format=json" -H "Host: ${endpoint}"
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}&format=json" -X ${method} | python -m json.tool
 }
 
 case $1 in
@@ -65,16 +63,16 @@ case $1 in
         endpoint=$zone0_endpoint
         shift
         ;;
-    1)
-        endpoint=$zone1_endpoint
-        shift
-        ;;
     2)
         endpoint=$zone2_endpoint
         shift
         ;;
+    3)
+        endpoint=$zone3_endpoint
+        shift
+        ;;
     *)
-        printf "Usage:\n\tbash %s <0|1|2> <operator> [<arg>...]\n" "$0"
+        printf "Usage:\n\tbash %s <0|2|3> <operator> [<arg>...]\n" "$0"
         printf "Example:\n"
         printf "\tbash %s 0 list_multipart_uploads <bucket> <object> [<upload id marker>]\n" "$0"
         printf "\tbash %s 0 get_all_parts <bucket> <object> <upload id>\n" "$0"

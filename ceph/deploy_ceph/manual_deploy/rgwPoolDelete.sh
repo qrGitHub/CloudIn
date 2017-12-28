@@ -30,11 +30,11 @@ rgw_pool_delete_10_2_5() {
     pool_delete ${1}.rgw.users.uid
     pool_delete ${1}.rgw.users.email
     pool_delete ${1}.rgw.users.keys
-    pool_delete ${1}.rgw.intent-log
-    pool_delete ${1}.rgw.meta
-    pool_delete ${1}.rgw.usage
-    pool_delete ${1}.rgw.users.swift
     pool_delete ${1}.rgw.rgw.buckets.extra
+    pool_delete ${1}.rgw.users.swift
+    pool_delete ${1}.rgw.usage
+    pool_delete ${1}.rgw.meta
+    pool_delete ${1}.rgw.intent-log
     pool_delete ${1}.rgw.log
     pool_delete ${1}.rgw.gc
     pool_delete ${1}.rgw.data.root
@@ -44,7 +44,15 @@ rgw_pool_delete_10_2_5() {
 }
 
 rgw_pool_delete_12_2_1() {
-    rgw_pool_delete_10_2_5 $1
+    pool_delete ${1}.rgw.buckets.non-ec
+    pool_delete ${1}.rgw.buckets.data
+    pool_delete ${1}.rgw.buckets.index
+    pool_delete ${1}.rgw.rgw.buckets.extra
+    pool_delete ${1}.rgw.meta
+    pool_delete ${1}.rgw.log
+    pool_delete ${1}.rgw.control
+
+    rgw_root_delete
 }
 
 zone=${1:-default} && rgw_pool_delete_12_2_1 $zone

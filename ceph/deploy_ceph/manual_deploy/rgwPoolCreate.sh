@@ -47,17 +47,9 @@ rgw_pool_create_12_2_1() {
     rgw_root_create
 
     pool_create ${1}.rgw.control 8
-    pool_create ${1}.rgw.data.root 8
-    pool_create ${1}.rgw.gc 8
     pool_create ${1}.rgw.log 8
-    pool_create ${1}.rgw.intent-log 8
     pool_create ${1}.rgw.meta 8
-    pool_create ${1}.rgw.usage 8
-    pool_create ${1}.rgw.users.swift 8
     pool_create ${1}.rgw.rgw.buckets.extra 16
-    pool_create ${1}.rgw.users.keys 8
-    pool_create ${1}.rgw.users.email 8
-    pool_create ${1}.rgw.users.uid 8
     pool_create ${1}.rgw.buckets.index 32
     pool_create ${1}.rgw.buckets.data 64
     pool_create ${1}.rgw.buckets.non-ec 32

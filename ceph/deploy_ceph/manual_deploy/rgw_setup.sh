@@ -17,6 +17,7 @@ radosgw-admin user create --uid="synchronization-user" --display-name="Synchroni
 access_key=$(radosgw-admin user info --uid=synchronization-user | grep access_key | awk -F'"' '{print $4}')
 secret_key=$(radosgw-admin user info --uid=synchronization-user | grep secret_key | awk -F'"' '{print $4}')
 radosgw-admin zone modify --rgw-zone=debug --access-key=$access_key --secret=$secret_key
+radosgw-admin period update --commit
 radosgw-admin user create --uid="cloudInS3User" --display-name="First User"
 create_admin_user
 

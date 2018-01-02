@@ -81,10 +81,14 @@ def del_bucket_cors(bucket_name):
 
 def create_bucket(bucket_name):
     # creating a bucket
-    response = s3client.create_bucket(Bucket=bucket_name,
-            CreateBucketConfiguration={
-                'LocationConstraint': region
-            })
+    if 'us-east-1' == region:
+        response = s3client.create_bucket(Bucket=bucket_name)
+    else:
+        response = s3client.create_bucket(Bucket=bucket_name,
+                            CreateBucketConfiguration={
+                                'LocationConstraint': region
+                            }
+                   )
     pretty_printer(response)
 
 def delete_bucket(bucket_name):

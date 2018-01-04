@@ -12,11 +12,27 @@ aws_endpoint=s3.ap-northeast-1.amazonaws.com
 
 # bucket policy list
 bucket_policy_list=(
-"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Action\": [\"s3:GetObject\"], \"Principal\": \"*\", \"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"AnonymousRead\"}]}"
-"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by 192.168.63.233\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:GetObject\", \"Condition\": {\"StringNotLikeIfExists\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}]}"
-"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by 192.168.63.233\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:GetObject\", \"Condition\": {\"Null\": {\"aws:Referer\": \"true\"}}, \"Principal\": \"*\"}]}"
-"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::lyb/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by 192.168.63.233\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.233*\"]}, \"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:*\", \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}]}"
-"{\"Version\": \"2012-10-17\", \"Id\": \"SpecificIPv4\", \"Statement\": [{\"Resource\": \"arn:aws:s3:::lyb/*\", \"Effect\": \"Allow\", \"Sid\": \"IPAllow\", \"Action\": \"s3:GetObject\", \"Condition\": {\"NotIpAddress\": {\"aws:SourceIp\": \"10.3.0.101/32\"}, \"IpAddress\": {\"aws:SourceIp\": [\"10.3.0.0/24\", \"172.16.1.5/32\"]}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Action\": [\"s3:GetObject\"], \"Principal\": \"*\", \"Resource\": [\"arn:aws:s3:::myz/*\"], \"Effect\": \"Allow\", \"Sid\": \"AnonymousRead\"}]}"
+"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Action\": [\"s3:GetObject\"], \"Principal\": {\"AWS\": [\"arn:aws:iam:::user/normal\"]}, \"Resource\": [\"arn:aws:s3:::myz/*\"], \"Effect\": \"Allow\", \"Sid\": \"SpecificPrincipal\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"SpecificIPv4\", \"Statement\": [{\"Resource\": \"arn:aws:s3:::myz/*\", \"Effect\": \"Allow\", \"Sid\": \"SpecificIPv4\", \"Action\": \"s3:GetObject\", \"Condition\": {\"NotIpAddress\": {\"aws:SourceIp\": \"10.3.0.101/32\"}, \"IpAddress\": {\"aws:SourceIp\": [\"10.3.0.0/24\", \"172.16.1.5/32\"]}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::myz/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by specific IP\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.233*\"]}, \"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::myz/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:*\", \"Condition\": {\"StringNotLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::myz/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by specific IP\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::myz/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:GetObject\", \"Condition\": {\"Null\": {\"aws:Referer\": \"true\"}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Id\": \"PreventHotLinking\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::myz/*\"], \"Effect\": \"Allow\", \"Sid\": \"Allow get requests referred by specific IP\", \"Action\": [\"s3:GetObject\"], \"Condition\": {\"StringLike\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}, {\"Resource\": \"arn:aws:s3:::myz/*\", \"Effect\": \"Deny\", \"Sid\": \"Explicit deny to ensure requests are allowed only from specific referer\", \"Action\": \"s3:GetObject\", \"Condition\": {\"StringNotLikeIfExists\": {\"aws:Referer\": [\"http://192.168.63.23*\"]}}, \"Principal\": \"*\"}]}"
+"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Principal\": \"*\", \"Resource\": [\"arn:aws:s3:::myz/*\"], \"Effect\": \"Allow\"}]}"
+"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Resource\": [\"arn:aws:s3:::myz/*\"], \"Effect\": \"Allow\"}]}"
+"{\"Version\": \"2012-10-17\", \"Statement\": [{\"Effect\": \"Allow\"}]}"
+"{\"Version\": \"2012-10-17\", \"Statement\": [{}]}"
+"{\"Version\": \"2012-10-17\", \"Statement\": []}"
+"{\"Version\": \"2012-10-17\", \"Statement\": }"
+"{\"Version\": \"2012-10-17\"}"
+"{}"
+""
+"{\"Version\": \"2017-12-26\"}"
+"{\"Statement\": {\"Principal\": \"InvalidPrincipal\"}}"
+"{\"Statement\": {\"Effect\": \"InvalidEffect\"}}"
+"{\"Statement\": {\"Action\": \"InvalidAction\"}}"
+"{\"Statement\": {\"Resource\": \"InvalidResource\"}}"
+"{\"Statement\": {\"Sid\": \"toBeFinished InvalidSid\"}}"
 )
 bucket_lifecycle_list=(
 '<?xml version="1.0" encoding="UTF-8"?>
@@ -42,6 +58,32 @@ bucket_lifecycle_list=(
         <AbortIncompleteMultipartUpload>
             <DaysAfterInitiation>123</DaysAfterInitiation>
         </AbortIncompleteMultipartUpload>
+    </Rule>
+</LifecycleConfiguration>'
+'<?xml version="1.0" encoding="UTF-8"?>
+<LifecycleConfiguration>
+    <Rule>
+        <ID>test1</ID>
+        <Filter>
+            <Tag>
+                <Key>rgw.</Key>
+                <Value>rgw.</Value>
+            </Tag>
+        </Filter>
+        <Status>Enabled</Status>
+        <Expiration>
+            <Days>1</Days>
+        </Expiration>
+    </Rule>
+    <Rule>
+        <ID>test2</ID>
+        <Filter>
+            <Prefix>a.</Prefix>
+        </Filter>
+        <Status>Enabled</Status>
+        <Expiration>
+            <Days>1</Days>
+        </Expiration>
     </Rule>
 </LifecycleConfiguration>'
 )
@@ -115,6 +157,17 @@ create_bucket() {
 
 delete_bucket() {
     _bucket_action DELETE $1
+    echo
+}
+
+listAllMyBuckets() {
+    local uri=
+    local date=$(DATE)
+    local method=GET content_md5 content_type
+    local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
+    local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
+
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}?format=json"
     echo
 }
 
@@ -210,7 +263,7 @@ del_object_tag() {
     _tag_action DELETE $1 $2
 }
 
-get_all_keys() {
+listBucket() {
     # Equals to bucket.get_all_keys() in boto
     #FIXME Only get MaxKeys keys at most, how to get the next batch?
     local uri=$1/
@@ -294,9 +347,10 @@ case $1 in
         printf "\tbash %s 0 get_user_info <uid>\n" "$0"
         printf "\tbash %s 0 get_usage <uid> [start=YYYY-mm-dd%%20HH:MM:SS] [end=YYYY-mm-dd%%20HH:MM:SS]\n" "$0" # 不传start和end就是list全部
         printf "\tbash %s 0 get_object <bucket> <object> [<start>-<end>]\n" "$0"
-        printf "\tbash %s 0 get_all_keys <bucket>\n" "$0"
+        printf "\tbash %s 0 listBucket <bucket>\n" "$0"
         printf "\tbash %s 0 create_bucket <bucket>\n" "$0"
         printf "\tbash %s 0 delete_bucket <bucket>\n" "$0"
+        printf "\tbash %s 0 listAllMyBuckets\n" "$0"
         printf "\tbash %s 0 put_bucket_acl <bucket> <private|public-read|public-read-write|authenticated-read>\n" "$0"
         printf "\tbash %s 0 get_bucket_acl <bucket>\n" "$0"
         printf "\tbash %s 0 put_bucket_policy <bucket> <0-4>\n" "$0"

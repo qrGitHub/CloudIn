@@ -272,7 +272,8 @@ listBucket() {
     local header="${method}\n${content_md5}\n${content_type}\n${date}\n/${uri}"
     local sig=$(echo -en ${header} | openssl sha1 -hmac ${sk} -binary | base64)
 
-    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}?format=json" | python -m json.tool
+    curl -v -H "Date: ${date}" -H "Authorization: AWS ${ak}:${sig}" "http://${endpoint}/${uri}?format=json"
+    echo
 }
 
 get_object() {

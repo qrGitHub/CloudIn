@@ -50,6 +50,13 @@ addMDS() {
         return $ret
     fi
 
+    doCommand sudo chown -R ceph:ceph ${mdsDir}
+    ret=$?
+    if [ $ret -ne 0 ]; then
+        echo "change owner of mds directory failed!"
+        return $ret
+    fi
+
     echo "Update ceph.conf refer to confForMDS"
 }
 

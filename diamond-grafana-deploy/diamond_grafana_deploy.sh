@@ -91,7 +91,7 @@ function install_grafana()
     install_grafana_deps
 
     cd $exec_dir
-    dpkg -i grafana_2.6.0_amd64.deb
+    dpkg -i grafana_4.4.1_amd64.deb
     service grafana-server start
 }
 

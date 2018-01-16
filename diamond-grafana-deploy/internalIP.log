@@ -1,0 +1,8 @@
+/opt/graphite/bin/carbon-cache.py stop
+/opt/graphite/bin/carbon-cache.py start
+
+ps aux | grep graphite | grep -v 'carbon-cache.py' | grep -v grep | awk '{print $2}' | xargs -n 1 kill
+cd /opt/graphite
+PYTHONPATH=`pwd`/storage/whisper ./bin/run-graphite-devel-server.py --port=8085 --libs=`pwd`/webapp /opt/graphite 1>/opt/graphite/storage/log/webapp/process.log 2>&1 &
+
+service grafana-server restart

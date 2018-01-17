@@ -1,0 +1,9 @@
+BJ-BGP02-001-001 /dev/volume-group-sata/volume-12bd0d21-d92c-4df0-837d-b1bea3933fe5 qrCloudin_lvm_sata_5
+BJ-BGP02-001-001 /dev/volume-group-sata/volume-164edb8d-7cfd-48f8-b315-dadad7f4d2d3 qrCloudin_lvm_sata_20
+BJ-BGP02-002-001 /dev/volume-group-sata/volume-98585845-45ab-4a38-b867-420f2fd1b0de qrCloudin_lvm_sata_50
+BJ-BGP02-002-001 /dev/volume-group-ssd/volume-681195e3-10ce-48ce-98fb-1d0be6862bbc qrCloudin_lvm_ssd_5
+BJ-BGP02-002-001 /dev/volume-group-ssd/volume-44337467-8a6b-4676-86d9-20c14f30e27b qrCloudin_lvm_ssd_20
+BJ-BGP02-001-001 /dev/volume-group-ssd/volume-323d4b2e-eb5a-466e-8024-e5ff49586f6a qrCloudin_lvm_ssd_50
+BJ-BGP02-002-001 /dev/volume-group-pcie/volume-4d513f65-36b2-4446-8fed-df61129cdd6f qrCloudin_lvm_pcie_5
+BJ-BGP02-002-001 /dev/volume-group-pcie/volume-3c35a4c5-f193-4a5b-81ea-cd6c30cf38fa qrCloudin_lvm_pcie_20
+BJ-BGP02-001-001 /dev/volume-group-pcie/volume-4f0beee3-fde3-4c58-845b-2616608aef55 qrCloudin_lvm_pcie_50

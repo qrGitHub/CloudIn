@@ -1,0 +1,12 @@
+sed 's/<HOST>/YF-contorller-01/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-01/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-02/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-03/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-04/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-05/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-contorller-02/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-06/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-07/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-08/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-09/g' template.rgw >> tmp.log
+sed 's/<HOST>/YF-compute-10/g' template.rgw >> tmp.log
